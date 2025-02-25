@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react"
-import { useParams } from "react-router"
+import { NavLink, useParams } from "react-router"
 import Container from "@mui/material/Container"
-import Video from "../../components/Video"
 import { Typography } from "@mui/joy"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
+import { Button, Divider, Menu, MenuItem } from "@mui/material"
+import Video from "../../components/Video"
 import BlockLabel from "../../components/BlockLabel"
 
 const training = {
@@ -80,10 +81,19 @@ const Training = () => {
 
   return (
     <Container maxWidth="md" style={{ marginTop: "20px" }}>
+      <Button variant="text" href="/">
+        dashboard
+      </Button>
+      <Button variant="text" href="/projects">
+        projects
+      </Button>
+      <Divider style={{ marginBottom: 10 }} />
+
       {tr ? (
         <div>
-          <Typography level="h1">{tr.title}</Typography>
+          <Typography level="h4">{tr.title}</Typography>
           <Video urls={urls} />
+          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
           {tr.blocks.map(({ id, title, onTime, relaxTime, exercises }) => {
             return (
               <SimpleTreeView>
@@ -95,7 +105,7 @@ const Training = () => {
                     return (
                       <TreeItem
                         itemId={`exercise-${exr.id}`}
-                        label={exr.title}
+                        label={`|-- ${exr.title}`}
                       />
                     )
                   })}
