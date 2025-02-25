@@ -4,8 +4,8 @@ const Dashboard = () => {
   return (
     <div>
       <nav>
-        <NavLink to="/list" end>
-          List
+        <NavLink to="/projects" end>
+          Projects
         </NavLink>
       </nav>
     </div>

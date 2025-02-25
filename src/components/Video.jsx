@@ -1,34 +1,28 @@
-import * as React from "react"
-import Box from "@mui/joy/Box"
-import Card from "@mui/joy/Card"
-import CardCover from "@mui/joy/CardCover"
-import CardContent from "@mui/joy/CardContent"
-import Typography from "@mui/joy/Typography"
+import React, { useState, useRef } from "react"
+import ReactPlayer from "react-player"
+import Container from "@mui/material/Container"
 
-const Video = () => {
+const VideoPlayer = ({ urls }) => {
+  const [currIdx, setCurrIdx] = useState(0)
+  const playerRef = useRef(null)
+
+  const handleEnd = () => {
+    setCurrIdx((prevIndex) => (prevIndex + 1 < urls.length ? prevIndex + 1 : 0))
+  }
+
   return (
-    <Box
-      component="div"
-      sx={{ display: "flex", gap: 2, flexWrap: "wrap", p: 5, m: 0 }}
-    >
-      <Card component="div" sx={{ minWidth: 300, flexGrow: 1 }}>
-        <CardContent>
-          <video
-            controls
-            autoPlay
-            loop
-            muted
-            poster="https://assets.codepen.io/6093409/river.jpg"
-          >
-            <source
-              src="https://assets.codepen.io/6093409/river.mp4"
-              type="video/mp4"
-            />
-          </video>
-        </CardContent>
-      </Card>
-    </Box>
+    <Container maxWidth="md" style={{ marginTop: "20px" }}>
+      <ReactPlayer
+        ref={playerRef}
+        url={urls[currIdx]}
+        playing={false}
+        controls={true}
+        width="100%"
+        height="100%"
+        onEnded={handleEnd}
+      />
+    </Container>
   )
 }
 
-export default Video
+export default VideoPlayer
