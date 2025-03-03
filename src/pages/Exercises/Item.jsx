@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, use } from "react"
 import { ButtonGroup, Button } from "@mui/material"
 
-const Item = () => {
+const Item = ({ open }) => {
+  useEffect(() => {
+    if (open) {
+      // fetch file
+      //draw it here
+    }
+  }, [open])
+
   return (
     <ButtonGroup variant="contained" aria-label="Basic button group">
       <Button>One</Button>

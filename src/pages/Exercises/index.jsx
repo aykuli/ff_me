@@ -13,6 +13,7 @@ import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import Item from "./Item"
 import AddIcon from "@mui/icons-material/Add"
+import AddModal from "./AddModal"
 
 const Exercises = () => {
   // get from .env file backend address
@@ -23,6 +24,7 @@ const Exercises = () => {
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpenAddModal, setIsOpenAddModal] = useState(false)
+  const [openId, setOpenId] = useState(undefined)
 
   useEffect(() => {
     const url = process.env.REACT_APP_API_URL
@@ -48,16 +50,12 @@ const Exercises = () => {
       })
   }, [])
 
-  const onAddBtnClick = () => {
-    setIsOpenAddModal(true)
-  }
-
   return (
     <Container maxWidth="md" style={{ marginTop: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Typography level="h2">Exercises list</Typography>
         <IconButton
-          onClick={onAddBtnClick}
+          onClick={() => setIsOpenAddModal(true)}
           aria-label="add exercise"
           size="large"
           color="info"
@@ -72,11 +70,11 @@ const Exercises = () => {
         ) : (
           <nav aria-label="projects">
             <List>
-              {list.map(({ id, titleEn }) => {
+              {list.map(({ id, titleEn }, idx) => {
                 return (
-                  <SimpleTreeView id={id}>
+                  <SimpleTreeView id={id} onClick={() => setOpenId(id)}>
                     <TreeItem itemId="1" label={titleEn}>
-                      <Item />
+                      <Item open={openId === id} />
                     </TreeItem>
                   </SimpleTreeView>
                 )
@@ -85,6 +83,7 @@ const Exercises = () => {
           </nav>
         )}
       </Box>
+      <AddModal open={isOpenAddModal} onClose={() => {}} />
     </Container>
   )
 }
