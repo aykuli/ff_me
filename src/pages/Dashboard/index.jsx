@@ -19,8 +19,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 const links = [
+  { route: "/exercises/create", title: "Add Exercise" },
   { route: "/exercises", title: "Exercises" },
-  { route: "/create", title: "Create project" },
+  { route: "/projects/create", title: "Create project" },
   { route: "/projects", title: "Projects" },
 ]
 

@@ -1,78 +1,89 @@
 import React, { useState, useEffect } from "react"
-import { NavLink } from "react-router"
+import { useNavigate } from "react-router-dom"
 import {
   Container,
   Box,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  CircularProgress,
+  IconButton,
 } from "@mui/material"
 import { Typography } from "@mui/joy"
 import axios from "axios"
-
-const trainigList = [
-  {
-    id: 1,
-    title: "Trainig1",
-  },
-  { id: 2, title: "Trainig2" },
-]
+import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
+import { TreeItem } from "@mui/x-tree-view/TreeItem"
+import Item from "./Item"
+import { Add, Close } from "@mui/icons-material"
 
 const Exercises = () => {
-  // get from .env file backend address
-  //fetch exercises list
-  //draw it
-  // display absolute big pus btn
-  //another page for adding exercise
   const [list, setList] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [openId, setOpenId] = useState(undefined)
+  const [error, setError] = useState(undefined)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const url = process.env.REACT_APP_API_URL
-    console.log(url)
+    setIsLoading(true)
     axios({
       method: "get",
-      url: `${url}/exercises/list`,
+      url: `${process.env.REACT_APP_API_URL}/exercises/list`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     })
-      .then((response) => {
-        console.log("response", response)
-        setList(response.data)
-      })
-      .catch((e) => {
-        console.log(e.response)
-      })
-      .finally(() => {
-        console.log("end everything")
-      })
-
-    setList(trainigList)
+      .then((response) => setList(response.data))
+      .catch((e) => setError("Server exercises fetch error"))
+      .finally(() => setIsLoading(false))
   }, [])
 
   return (
     <Container maxWidth="md" style={{ marginTop: "20px" }}>
+      {error ? (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography color="danger" level="p">
+            {error}
+          </Typography>
+          <IconButton
+            onClick={() => setError(undefined)}
+            size="small"
+            color="error"
+            edge="end"
+          >
+            <Close />
+          </IconButton>
+        </div>
+      ) : null}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography level="h3">Exercises list</Typography>
+
+        <IconButton
+          onClick={() => navigate("/exercises/create")}
+          aria-label="add exercise"
+          size="large"
+          color="info"
+          edge="end"
+        >
+          <Add />
+        </IconButton>
+      </div>
       <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <Typography level="h1">Exercises list</Typography>
-        <nav aria-label="projects">
-          <List>
-            {list.map(({ id, titleEn }) => {
-              return (
-                <ListItem id={id} disablePadding>
-                  <ListItemButton>
-                    <ListItemText>
-                      <NavLink to={`/projects/${id}`} end>
-                        <Typography level="body-lg">{titleEn}</Typography>
-                      </NavLink>
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
-          </List>
-        </nav>
+        {isLoading ? (
+          <CircularProgress size="3rem" />
+        ) : (
+          <nav aria-label="projects">
+            <List>
+              {list.map(({ id, titleEn }, idx) => {
+                return (
+                  <SimpleTreeView id={id} onClick={() => setOpenId(id)}>
+                    <TreeItem itemId="1" label={titleEn}>
+                      <Item open={openId === id} />
+                    </TreeItem>
+                  </SimpleTreeView>
+                )
+              })}
+            </List>
+          </nav>
+        )}
       </Box>
     </Container>
   )
