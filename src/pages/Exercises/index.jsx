@@ -4,20 +4,15 @@ import {
   Container,
   Box,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  CircularProgress,
+  IconButton,
 } from "@mui/material"
 import { Typography } from "@mui/joy"
 import axios from "axios"
-
-const trainigList = [
-  {
-    id: 1,
-    title: "Trainig1",
-  },
-  { id: 2, title: "Trainig2" },
-]
+import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
+import { TreeItem } from "@mui/x-tree-view/TreeItem"
+import Item from "./Item"
+import AddIcon from "@mui/icons-material/Add"
 
 const Exercises = () => {
   // get from .env file backend address
@@ -26,10 +21,13 @@ const Exercises = () => {
   // display absolute big pus btn
   //another page for adding exercise
   const [list, setList] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
 
   useEffect(() => {
     const url = process.env.REACT_APP_API_URL
     console.log(url)
+    setIsLoading(true)
     axios({
       method: "get",
       url: `${url}/exercises/list`,
@@ -46,33 +44,46 @@ const Exercises = () => {
         console.log(e.response)
       })
       .finally(() => {
-        console.log("end everything")
+        setIsLoading(false)
       })
-
-    setList(trainigList)
   }, [])
+
+  const onAddBtnClick = () => {
+    setIsOpenAddModal(true)
+  }
 
   return (
     <Container maxWidth="md" style={{ marginTop: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography level="h2">Exercises list</Typography>
+        <IconButton
+          onClick={onAddBtnClick}
+          aria-label="add exercise"
+          size="large"
+          color="info"
+          edge="end"
+        >
+          <AddIcon />
+        </IconButton>
+      </div>
       <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <Typography level="h1">Exercises list</Typography>
-        <nav aria-label="projects">
-          <List>
-            {list.map(({ id, titleEn }) => {
-              return (
-                <ListItem id={id} disablePadding>
-                  <ListItemButton>
-                    <ListItemText>
-                      <NavLink to={`/projects/${id}`} end>
-                        <Typography level="body-lg">{titleEn}</Typography>
-                      </NavLink>
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-              )
-            })}
-          </List>
-        </nav>
+        {isLoading ? (
+          <CircularProgress size="3rem" />
+        ) : (
+          <nav aria-label="projects">
+            <List>
+              {list.map(({ id, titleEn }) => {
+                return (
+                  <SimpleTreeView id={id}>
+                    <TreeItem itemId="1" label={titleEn}>
+                      <Item />
+                    </TreeItem>
+                  </SimpleTreeView>
+                )
+              })}
+            </List>
+          </nav>
+        )}
       </Box>
     </Container>
   )
