@@ -37,7 +37,7 @@ const Exercises = () => {
   }, [])
 
   return (
-    <Container maxWidth="md" style={{ marginTop: "20px" }}>
+    <>
       {error ? (
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Typography color="danger" level="p">
@@ -85,7 +85,7 @@ const Exercises = () => {
           </nav>
         )}
       </Box>
-    </Container>
+    </>
   )
 }
 
