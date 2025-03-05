@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 import {
+  Snackbar,
+  Alert,
   Button,
   Box,
   TextField,
-  Container,
   Grid2 as Grid,
   CircularProgress,
 } from "@mui/material"
+
 import { styled } from "@mui/material/styles"
-import CloudUploadIcon from "@mui/icons-material/CloudUpload"
-import { Typography } from "@mui/joy"
+import { CloudUpload } from "@mui/icons-material"
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -28,15 +28,14 @@ const VisuallyHiddenInput = styled("input")({
 
 const AddExercise = () => {
   const [isUploading, setIsUploading] = useState(false)
-  const [error, setError] = useState(undefined)
-  const [successMsg, setSuccessMsg] = useState(undefined)
+  const [openSnackbar, setOpenSb] = useState(false)
+  const [sbMsg, setSbMsg] = useState("")
+  const [sbType, setSbType] = useState("success")
+
   const [file, setFile] = useState(undefined)
   const [titleEn, setTitleEn] = useState(undefined)
   const [titleRu, setTitleRu] = useState(undefined)
   const [saveBtnDisabled, setSaveBtnDisabled] = useState(true)
-
-  const navigate = useNavigate()
-  // make green popover showing cusess fully uploading
 
   useEffect(() => {
     if (file && titleEn && titleRu) {
@@ -61,13 +60,18 @@ const AddExercise = () => {
       },
     })
       .then((response) => {
-        setSuccessMsg("Successfully saved")
-        setTitleEn(undefined)
-        setTitleRu(undefined)
+        setSbMsg("Successfully saved")
+        setSbType("success")
+        setTitleEn("")
+        setTitleRu("")
         setFile(undefined)
       })
-      .catch((e) => setError("Server exercises fetch error"))
+      .catch((e) => {
+        setSbMsg("Exercise save error: " + e)
+        setSbType("error")
+      })
       .finally(() => {
+        setOpenSb(true)
         setSaveBtnDisabled(true)
         setIsUploading(false)
       })
@@ -88,24 +92,27 @@ const AddExercise = () => {
       }
     }
   }
+  const handleCloseSb = () => {
+    setOpenSb(false)
+    setSbMsg("")
+  }
 
   return (
-    <Container maxWidth="md" style={{ marginTop: "20px" }}>
-      {successMsg ? (
-        <div>
-          <Button
-            component="button"
-            variant="text"
-            tabIndex={-1}
-            onClick={() => navigate("/exercises")}
-          >
-            Go to the list of exercises
-          </Button>
-        </div>
-      ) : null}
-      <Typography level="h3" gutterBottom>
-        Add new exercise
-      </Typography>
+    <>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSb}
+      >
+        <Alert
+          onClose={handleCloseSb}
+          severity={sbType}
+          variant="outlined"
+          sx={{ width: "100%" }}
+        >
+          {sbMsg}
+        </Alert>
+      </Snackbar>
       <Box
         sx={{ width: "100%" }}
         component="form"
@@ -115,27 +122,30 @@ const AddExercise = () => {
         <Grid direction="column" container rowSpacing={2}>
           <Grid size={"100%"}>
             <TextField
+              fullWidth
               id="title_en"
-              label="title_en"
+              label="title english"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleEn", e)}
             />
           </Grid>
           <Grid size={"100%"}>
             <TextField
+              fullWidth
               id="title_ru"
-              label="title_ru"
+              label="title russian"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleRu", e)}
             />
           </Grid>
           <Grid size={"100%"}>
             <Button
+              fullWidth
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
-              startIcon={<CloudUploadIcon />}
+              startIcon={<CloudUpload />}
             >
               Upload file
               <VisuallyHiddenInput
@@ -149,11 +159,13 @@ const AddExercise = () => {
               />
             </Button>
           </Grid>
-          <Grid size={"100%"}>
+          <Grid size={"100%"} style={{ marginTop: "6vh" }}>
             <Button
               component="button"
               variant="contained"
               tabIndex={-1}
+              fullWidth
+              color="success"
               onClick={handleSave}
               disabled={saveBtnDisabled}
             >
@@ -163,7 +175,7 @@ const AddExercise = () => {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </>
   )
 }
 

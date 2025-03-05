@@ -1,5 +1,3 @@
-import { Container, Button, Menu, MenuItem } from "@mui/material"
-
 import Exercises from "./pages/Exercises"
 import AddExercise from "./pages/AddExercise"
 import Training from "./pages/Training"
@@ -11,7 +9,7 @@ const routes = [
     route: "/exercises",
     title: "Exercises",
     component: (
-      <Header>
+      <Header pageName={"Exercises"}>
         <Exercises />
       </Header>
     ),
@@ -20,8 +18,8 @@ const routes = [
         route: "create",
         title: "Add Exercise",
         component: (
-          <Header>
-            <AddExercise />,
+          <Header pageName={"Add Exercise"}>
+            <AddExercise />
           </Header>
         ),
       },
@@ -31,17 +29,17 @@ const routes = [
     route: "/projects",
     title: "Projects",
     component: (
-      <Header>
+      <Header pageName={"Projects"}>
         <List />,
       </Header>
     ),
     children: [
       {
         route: ":id",
-        title: "Add Exercise",
+        title: "Project",
         component: (
-          <Header>
-            <Training />,
+          <Header pageName={"Project"}>
+            <Training />
           </Header>
         ),
       },

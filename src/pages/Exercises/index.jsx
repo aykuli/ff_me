@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import {
-  Container,
-  Box,
-  List,
-  CircularProgress,
-  IconButton,
-} from "@mui/material"
+import { Box, List, CircularProgress, IconButton } from "@mui/material"
 import { Typography } from "@mui/joy"
 import axios from "axios"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import Item from "./Item"
-import { Add, Close } from "@mui/icons-material"
+import { Close } from "@mui/icons-material"
 
 const Exercises = () => {
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [openId, setOpenId] = useState(undefined)
   const [error, setError] = useState(undefined)
-  const navigate = useNavigate()
 
   useEffect(() => {
     setIsLoading(true)
@@ -53,19 +45,7 @@ const Exercises = () => {
           </IconButton>
         </div>
       ) : null}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography level="h3">Exercises list</Typography>
 
-        <IconButton
-          onClick={() => navigate("/exercises/create")}
-          aria-label="add exercise"
-          size="large"
-          color="info"
-          edge="end"
-        >
-          <Add />
-        </IconButton>
-      </div>
       <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {isLoading ? (
           <CircularProgress size="3rem" />
