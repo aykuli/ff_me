@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react"
+import axios from "axios"
+
 import { Box, List, CircularProgress, IconButton } from "@mui/material"
 import { Typography } from "@mui/joy"
-import axios from "axios"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
-import Item from "./Item"
 import { Close } from "@mui/icons-material"
+
+import Item from "./Item"
 
 const Exercises = () => {
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [openId, setOpenId] = useState(undefined)
+  const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
   const [error, setError] = useState(undefined)
 
   useEffect(() => {
@@ -27,6 +29,13 @@ const Exercises = () => {
       .catch((e) => setError("Server exercises fetch error"))
       .finally(() => setIsLoading(false))
   }, [])
+
+  const handleOpenItem = (idx) => {
+    setOpenIds((prev) => {
+      prev[idx] = !prev[idx]
+      return prev
+    })
+  }
 
   return (
     <>
@@ -52,11 +61,18 @@ const Exercises = () => {
         ) : (
           <nav aria-label="projects">
             <List>
-              {list.map(({ id, titleEn }, idx) => {
+              {list.map((exercise, idx) => {
                 return (
-                  <SimpleTreeView id={id} onClick={() => setOpenId(id)}>
-                    <TreeItem itemId="1" label={titleEn}>
-                      <Item open={openId === id} />
+                  <SimpleTreeView
+                    id={exercise.id}
+                    onClick={(e) => handleOpenItem(idx)}
+                  >
+                    <TreeItem
+                      itemId="1"
+                      label={exercise.titleRu}
+                      sx={{ p: 0, m: 0 }}
+                    >
+                      <Item open={openIds.includes(idx)} exercise={exercise} />
                     </TreeItem>
                   </SimpleTreeView>
                 )

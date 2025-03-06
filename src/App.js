@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        {routes.map(({ route, title, component, children }) => {
+        {routes.map(({ route, component, children }) => {
           return (
             <Route id={route} path={route}>
               <Route index element={component} />

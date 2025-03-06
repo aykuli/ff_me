@@ -1,20 +1,52 @@
-import React, { useState, useEffect, use } from "react"
-import { ButtonGroup, Button } from "@mui/material"
+import React, { useState, useEffect } from "react"
+import axios from "axios"
 
-const Item = ({ open }) => {
+import { Box, CircularProgress } from "@mui/material"
+import { Typography } from "@mui/joy"
+
+const Item = ({ open, exercise }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const src = `${process.env.REACT_APP_CDN_URL}${exercise.filename}`
+
   useEffect(() => {
-    if (open) {
-      // fetch file
-      //draw it here
+    if (!open) {
+      return
     }
-  }, [open])
+
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_CDN_URL}${exercise.filename}`,
+      headers: { "Access-Control-Allow-Origin": "*" },
+    })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((e) => {
+        console.Error("Server exercises fetch error")
+      })
+      .finally(() => setIsLoading(false))
+  }, [open, exercise.filename])
 
   return (
-    <ButtonGroup variant="contained" aria-label="Basic button group">
-      <Button>One</Button>
-      <Button>Two</Button>
-      <Button>Three</Button>
-    </ButtonGroup>
+    <Box sx={{ width: "100%", maxWidth: 640, bgcolor: "background.paper" }}>
+      {isLoading ? (
+        <CircularProgress size="3rem" />
+      ) : (
+        <div>
+          <Typography level="body-md" sx={{ fontSize: "xl", mb: 0.5, mt: 2 }}>
+            {exercise.titleEn}
+          </Typography>
+          <Typography level="body-md" sx={{ fontSize: "xl", mb: 2 }}>
+            {exercise.titleRu}
+          </Typography>
+          <Box>
+            <video controls loop muted width={"100%"}>
+              <source controls src={src} type="video/mp4" />
+            </video>
+          </Box>
+        </div>
+      )}
+    </Box>
   )
 }
 

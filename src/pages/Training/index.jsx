@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { NavLink, useParams } from "react-router"
+import { useParams } from "react-router"
 import Container from "@mui/material/Container"
 import { Typography } from "@mui/joy"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
-import { Button, Divider, Menu, MenuItem } from "@mui/material"
+import { Button, Divider } from "@mui/material"
 import Video from "../../components/Video"
 import BlockLabel from "../../components/BlockLabel"
 
