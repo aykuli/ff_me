@@ -14,12 +14,13 @@ const Exercises = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
   const [error, setError] = useState(undefined)
+  const url = `${process.env.REACT_APP_API_URL}/exercises`
 
   useEffect(() => {
     setIsLoading(true)
     axios({
       method: "get",
-      url: `${process.env.REACT_APP_API_URL}/exercises/list`,
+      url: `${url}/list`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -55,7 +56,7 @@ const Exercises = () => {
         </div>
       ) : null}
 
-      <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
         {isLoading ? (
           <CircularProgress size="3rem" />
         ) : (
@@ -68,9 +69,8 @@ const Exercises = () => {
                     onClick={(e) => handleOpenItem(idx)}
                   >
                     <TreeItem
-                      itemId="1"
-                      label={exercise.titleRu}
-                      sx={{ p: 0, m: 0 }}
+                      itemId={idx}
+                      label={<Typography>{exercise.titleRu}</Typography>}
                     >
                       <Item open={openIds.includes(idx)} exercise={exercise} />
                     </TreeItem>
