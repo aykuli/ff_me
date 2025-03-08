@@ -18,25 +18,29 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }))
 
+const links = [
+  { route: "/exercises/create", title: "Add Exercise" },
+  { route: "/exercises", title: "Exercises" },
+  { route: "/projects/create", title: "Create project" },
+  { route: "/projects", title: "Projects" },
+]
+
 const Dashboard = () => {
   return (
     <Container maxWidth="md" style={{ marginTop: "60px" }}>
       <Box sx={{ width: "100%" }}>
         <Grid direction="column" container rowSpacing={5}>
-          <Grid size={"100%"}>
-            <Item elevation={5}>
-              <NavLink to="/create" end>
-                <Typography level="h3">Create</Typography>
-              </NavLink>
-            </Item>
-          </Grid>
-          <Grid size={"100%"}>
-            <Item elevation={5}>
-              <NavLink to="/projects" end>
-                <Typography level="h3">Projects</Typography>
-              </NavLink>
-            </Item>
-          </Grid>
+          {links.map(({ route, title }) => {
+            return (
+              <Grid size={"100%"} id={route}>
+                <Item elevation={5}>
+                  <NavLink to={route} end>
+                    <Typography level="h3">{title}</Typography>
+                  </NavLink>
+                </Item>
+              </Grid>
+            )
+          })}
         </Grid>
       </Box>
     </Container>
