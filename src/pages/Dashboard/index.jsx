@@ -1,10 +1,10 @@
 import { NavLink } from "react-router"
-import { useLocation, Outlet } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 
 import { Container, Box, Paper, Grid2 as Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { Typography } from "@mui/joy"
-import Header from "../../components/Header"
+import ProtectedRoute from "../../components/ProtectedRoute"
 
 const Item = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -33,8 +33,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Header />
-      <Outlet />
+      <ProtectedRoute />
       {location.pathname === "/" ? (
         <Container maxWidth="md" style={{ marginTop: "60px" }}>
           <Box sx={{ width: "100%" }}>

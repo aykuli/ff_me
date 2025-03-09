@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useLocation, Outlet } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import {
   Box,
@@ -14,7 +14,7 @@ import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
 
-const Header = () => {
+const Header = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [open, setOpen] = useState(Boolean(anchorEl))
   const [currRoute, setCurrRoute] = useState("")
@@ -80,6 +80,7 @@ const Header = () => {
             )
           })}
         </Menu>
+        {children}
       </Box>
     </Container>
   )

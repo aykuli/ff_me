@@ -1,13 +1,12 @@
-import React, { useState, useContext } from "react"
+import React, { useState } from "react"
 import { Navigate } from "react-router-dom"
 import { Container } from "@mui/material"
 import AuthForm from "../../components/AuthForm"
+import ProtectedRoute from "../../components/ProtectedRoute"
 
 import axios from "axios"
 
 const Login = () => {
-  // const [context, setContext] = useContext(MeasurementContext)
-
   const [login, setLogin] = useState("")
   const [password, setPassword] = useState("")
   const [pwdInputType, setPwdInputType] = useState("password")
@@ -41,22 +40,25 @@ const Login = () => {
   }
 
   return (
-    <Container style={{ paddingTop: "10vh", paddingBottom: "5vh" }}>
-      {isRedirect && <Navigate to="/" replace />}
-      <AuthForm
-        onSave={sendCredentials}
-        data={{ login, password }}
-        {...{
-          isError,
-          setIsError,
-          setLogin,
-          pwdInputType,
-          setPassword,
-          setPwdInputType,
-          isSent,
-        }}
-      />
-    </Container>
+    <>
+      <ProtectedRoute />
+      <Container style={{ paddingTop: "10vh", paddingBottom: "5vh" }}>
+        {isRedirect && <Navigate to="/" replace />}
+        <AuthForm
+          onSave={sendCredentials}
+          data={{ login, password }}
+          {...{
+            isError,
+            setIsError,
+            setLogin,
+            pwdInputType,
+            setPassword,
+            setPwdInputType,
+            isSent,
+          }}
+        />
+      </Container>
+    </>
   )
 }
 

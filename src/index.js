@@ -5,11 +5,14 @@ import { RouterProvider } from "react-router-dom"
 import "./index.css"
 import reportWebVitals from "./reportWebVitals"
 import routes from "./routes"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
   <React.StrictMode>
-    <RouterProvider router={routes} />
+    <RouterProvider router={routes}>
+      <ProtectedRoute />
+    </RouterProvider>
   </React.StrictMode>
 )
 
