@@ -1,11 +1,16 @@
 import React, { useState, useContext } from "react"
 import { Navigate } from "react-router-dom"
-import { Container } from "@mui/material"
-import AuthForm from "../../components/AuthForm"
-
 import axios from "axios"
 
+import { Container } from "@mui/material"
+import { Typography } from "@mui/joy"
+
+import { AuthContext } from "../../App"
+import AuthForm from "../../components/AuthForm"
+
 const Register = () => {
+  const { setToken } = useContext(AuthContext)
+
   const [login, setLogin] = useState("")
   const [password, setPassword] = useState("")
   const [pwdInputType, setPwdInputType] = useState("password")
@@ -27,10 +32,10 @@ const Register = () => {
       },
     })
       .then((response) => {
-        // get uauth token here
-        console.log(response.headers)
-        console.log(response)
-        setIsRedirect(true)
+        if (response.data.token) {
+          setToken(response.data.token)
+          setIsRedirect(true)
+        }
       })
       .catch((e) => {
         setIsError(true)
@@ -42,6 +47,7 @@ const Register = () => {
 
   return (
     <Container style={{ paddingTop: "10vh", paddingBottom: "5vh" }}>
+      <Typography>REGSTER PGAE</Typography>
       {isRedirect && <Navigate to="/" replace />}
       <AuthForm
         onSave={sendCredentials}

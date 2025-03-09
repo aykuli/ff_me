@@ -1,12 +1,16 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { Navigate } from "react-router-dom"
-import { Container } from "@mui/material"
-import AuthForm from "../../components/AuthForm"
-import ProtectedRoute from "../../components/ProtectedRoute"
-
 import axios from "axios"
 
+import { Container } from "@mui/material"
+
+import AuthForm from "../../components/AuthForm"
+import ProtectedRoute from "../../components/ProtectedRoute"
+import { AuthContext } from "../../App"
+
 const Login = () => {
+  const { setToken } = useContext(AuthContext)
+
   const [login, setLogin] = useState("")
   const [password, setPassword] = useState("")
   const [pwdInputType, setPwdInputType] = useState("password")
@@ -28,7 +32,10 @@ const Login = () => {
       },
     })
       .then((response) => {
-        console.log(response.headers)
+        if (response.data.token) {
+          setToken(response.data.token)
+          setIsRedirect(true)
+        }
         setIsRedirect(true)
       })
       .catch((e) => {
