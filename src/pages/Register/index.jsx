@@ -29,6 +29,7 @@ const Register = () => {
       .then((response) => {
         // get uauth token here
         console.log(response.headers)
+        console.log(response)
         setIsRedirect(true)
       })
       .catch((e) => {
