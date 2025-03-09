@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
+import axios from "axios"
 
 import {
   Box,
@@ -9,12 +10,15 @@ import {
   MenuItem,
   Divider,
 } from "@mui/material"
-import { OtherHouses } from "@mui/icons-material"
+import { Logout, OtherHouses } from "@mui/icons-material"
 import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
+import { AuthContext } from "../App"
 
 const Header = ({ children }) => {
+  const { token, setToken } = useContext(AuthContext)
+
   const [anchorEl, setAnchorEl] = useState(null)
   const [open, setOpen] = useState(Boolean(anchorEl))
   const [currRoute, setCurrRoute] = useState("")
@@ -31,6 +35,22 @@ const Header = ({ children }) => {
     }
   }, [location])
 
+  const logout = () => {
+    axios({
+      method: "DELETE",
+      url: `${process.env.REACT_APP_API_URL}/logout`,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    }).finally(() => {
+      localStorage.clear(process.env.REACT_APP_TOKEN_LS_NAME)
+      setToken(null)
+      navigate("/login")
+    })
+  }
+
   return (
     <Container maxWidth="md" style={{ marginTop: "5vw" }}>
       <Box
@@ -43,20 +63,33 @@ const Header = ({ children }) => {
           p: 2,
         }}
       >
-        <IconButton
-          edge="end"
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? "long-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={(e) => {
-            setAnchorEl(open ? null : e.currentTarget)
-            setOpen(!open)
-          }}
-        >
-          <OtherHouses />
-        </IconButton>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={open ? "long-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={(e) => {
+              setAnchorEl(open ? null : e.currentTarget)
+              setOpen(!open)
+            }}
+          >
+            <OtherHouses />
+          </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={open ? "long-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={() => logout()}
+          >
+            <Logout />
+          </IconButton>
+        </div>
         <Divider style={{ marginBottom: "3vh" }} />
         <Typography level="h3" style={{ marginBottom: "2vh" }}>
           {currTitle}
