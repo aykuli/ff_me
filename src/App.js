@@ -1,28 +1,35 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { createContext, useEffect, useState } from "react"
+import { RouterProvider } from "react-router-dom"
 
-import Dashboard from "./pages/Dashboard"
+import "./index.css"
 import routes from "./routes"
+import ProtectedRoute from "./components/ProtectedRoute"
 
-function App() {
+export const AuthContext = createContext({ token: null, setToken: null })
+
+const App = () => {
+  const [token, setToken] = useState(null)
+
+  useEffect(() => {
+    const stToken = localStorage.getItem(process.env.REACT_APP_TOKEN_LS_NAME)
+    if (stToken) {
+      setToken(stToken)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (token === null || token === undefined) {
+      return
+    }
+    localStorage.setItem(process.env.REACT_APP_TOKEN_LS_NAME, token)
+  }, [token])
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        {routes.map(({ route, component, children }) => {
-          return (
-            <Route id={route} path={route}>
-              <Route index element={component} />
-              {children.map((ch) => {
-                return (
-                  <Route id={ch.route} path={ch.route} element={ch.component} />
-                )
-              })}
-            </Route>
-          )
-        })}
-      </Routes>
-    </BrowserRouter>
+    <AuthContext.Provider value={{ token, setToken }}>
+      <RouterProvider router={routes}>
+        <ProtectedRoute />
+      </RouterProvider>
+    </AuthContext.Provider>
   )
 }
-
 export default App

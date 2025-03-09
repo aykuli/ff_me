@@ -1,51 +1,47 @@
+import { createBrowserRouter } from "react-router-dom"
+
 import Exercises from "./pages/Exercises"
 import AddExercise from "./pages/AddExercise"
 import Training from "./pages/Training"
 import List from "./pages/Projects"
-import Header from "./components/Header"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Dashboard from "./pages/Dashboard"
 
-const routes = [
+const routes = createBrowserRouter([
   {
-    route: "/exercises",
-    title: "Exercises",
-    component: (
-      <Header pageName={"Exercises"}>
-        <Exercises />
-      </Header>
-    ),
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/vragneproidet",
+    element: <Register />,
+  },
+  {
+    path: "/",
+    element: <Dashboard />,
     children: [
       {
-        route: "create",
-        title: "Add Exercise",
-        component: (
-          <Header pageName={"Add Exercise"}>
-            <AddExercise />
-          </Header>
-        ),
+        path: "exercises",
+        element: <Exercises />,
+      },
+      {
+        path: "exercises/create",
+        index: false,
+        element: <AddExercise />,
+      },
+      {
+        path: "/projects",
+        element: <List />,
+      },
+      {
+        path: "/projects/:id",
+        element: <Training />,
       },
     ],
   },
-  {
-    route: "/projects",
-    title: "Projects",
-    component: (
-      <Header pageName={"Projects"}>
-        <List />,
-      </Header>
-    ),
-    children: [
-      {
-        route: ":id",
-        title: "Project",
-        component: (
-          <Header pageName={"Project"}>
-            <Training />
-          </Header>
-        ),
-      },
-    ],
-  },
-]
+])
+export default routes
 
 const menuRoutes = [
   {
@@ -65,5 +61,4 @@ const menuRoutes = [
     title: "Projects",
   },
 ]
-export default routes
 export { menuRoutes }

@@ -47,8 +47,7 @@ function CustomLabel({ lang, title, isEdit, onEdit, onSave, ...props }) {
   )
 }
 
-const Item = ({ open, exercise }) => {
-  console.log(exercise)
+const Item = ({ exercise }) => {
   const [value, setV] = useState(exercise)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditEn, setIsEditEn] = useState(false)
