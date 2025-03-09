@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom"
 import axios from "axios"
 
 import { Container } from "@mui/material"
-import { Typography } from "@mui/joy"
 
 import { AuthContext } from "../../App"
 import AuthForm from "../../components/AuthForm"
@@ -33,7 +32,7 @@ const Register = () => {
     })
       .then((response) => {
         if (response.data.token) {
-          setToken(response.data.token)
+          setToken(`Bearer token=${response.data.token}`)
           setIsRedirect(true)
         }
       })
@@ -47,7 +46,6 @@ const Register = () => {
 
   return (
     <Container style={{ paddingTop: "10vh", paddingBottom: "5vh" }}>
-      <Typography>REGSTER PGAE</Typography>
       {isRedirect && <Navigate to="/" replace />}
       <AuthForm
         onSave={sendCredentials}

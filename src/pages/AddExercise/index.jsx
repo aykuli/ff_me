@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import axios from "axios"
 
 import {
@@ -13,6 +13,8 @@ import {
 import { styled } from "@mui/material/styles"
 import { CloudUpload } from "@mui/icons-material"
 
+import { AuthContext } from "../../App"
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -26,6 +28,8 @@ const VisuallyHiddenInput = styled("input")({
 })
 
 const AddExercise = () => {
+  const { token } = useContext(AuthContext)
+
   const [isUploading, setIsUploading] = useState(false)
   const [openSnackbar, setOpenSb] = useState(false)
   const [sbMsg, setSbMsg] = useState("")
@@ -56,6 +60,7 @@ const AddExercise = () => {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Origin": "*", // todo change
+        Authorization: token,
       },
     })
       .then((response) => {

@@ -33,7 +33,7 @@ const Login = () => {
     })
       .then((response) => {
         if (response.data.token) {
-          setToken(response.data.token)
+          setToken(`Bearer token=${response.data.token}`)
           setIsRedirect(true)
         }
         setIsRedirect(true)

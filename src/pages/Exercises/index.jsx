@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import axios from "axios"
 
 import { Box, List, CircularProgress, IconButton } from "@mui/material"
@@ -8,12 +8,16 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { Close } from "@mui/icons-material"
 
 import Item from "./Item"
+import { AuthContext } from "../../App"
 
 const Exercises = () => {
+  const { token } = useContext(AuthContext)
+
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
   const [error, setError] = useState(undefined)
+
   const url = `${process.env.REACT_APP_API_URL}/exercises`
 
   useEffect(() => {
@@ -24,6 +28,7 @@ const Exercises = () => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        Authorization: token,
       },
     })
       .then((response) => setList(response.data))

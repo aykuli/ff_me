@@ -30,7 +30,6 @@ const links = [
 
 const Dashboard = () => {
   const location = useLocation()
-  console.log(location)
 
   return (
     <>
