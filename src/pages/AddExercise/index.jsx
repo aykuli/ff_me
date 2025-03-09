@@ -149,11 +149,7 @@ const AddExercise = () => {
               Upload file
               <VisuallyHiddenInput
                 type="file"
-                onChange={(e) => {
-                  console.log(e.target.files)
-                  console.log(e.target.files[0])
-                  setFile(e.target.files[0])
-                }}
+                onChange={(e) => setFile(e.target.files[0])}
                 multiple
               />
             </Button>

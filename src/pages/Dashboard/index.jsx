@@ -1,7 +1,10 @@
 import { NavLink } from "react-router"
+import { useLocation, Outlet } from "react-router-dom"
+
 import { Container, Box, Paper, Grid2 as Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { Typography } from "@mui/joy"
+import Header from "../../components/Header"
 
 const Item = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -26,24 +29,32 @@ const links = [
 ]
 
 const Dashboard = () => {
+  const location = useLocation()
+
   return (
-    <Container maxWidth="md" style={{ marginTop: "60px" }}>
-      <Box sx={{ width: "100%" }}>
-        <Grid direction="column" container rowSpacing={5}>
-          {links.map(({ route, title }) => {
-            return (
-              <Grid size={"100%"} id={route}>
-                <Item elevation={5}>
-                  <NavLink to={route} end>
-                    <Typography level="h3">{title}</Typography>
-                  </NavLink>
-                </Item>
-              </Grid>
-            )
-          })}
-        </Grid>
-      </Box>
-    </Container>
+    <>
+      <Header />
+      <Outlet />
+      {location.pathname === "/" ? (
+        <Container maxWidth="md" style={{ marginTop: "60px" }}>
+          <Box sx={{ width: "100%" }}>
+            <Grid direction="column" container rowSpacing={5}>
+              {links.map(({ route, title }) => {
+                return (
+                  <Grid size={"100%"} id={route}>
+                    <Item elevation={5}>
+                      <NavLink to={route} end>
+                        <Typography level="h3">{title}</Typography>
+                      </NavLink>
+                    </Item>
+                  </Grid>
+                )
+              })}
+            </Grid>
+          </Box>
+        </Container>
+      ) : null}
+    </>
   )
 }
 
