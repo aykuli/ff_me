@@ -18,13 +18,11 @@ const Exercises = () => {
   const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
   const [error, setError] = useState(undefined)
 
-  const url = `${process.env.REACT_APP_API_URL}/exercises`
-
   useEffect(() => {
     setIsLoading(true)
     axios({
       method: "get",
-      url: `${url}/list`,
+      url: `${process.env.REACT_APP_API_URL}/exercises/list`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -34,7 +32,7 @@ const Exercises = () => {
       .then((response) => setList(response.data))
       .catch((e) => setError("Server exercises fetch error"))
       .finally(() => setIsLoading(false))
-  }, [])
+  }, [token])
 
   const handleOpenItem = (idx) => {
     setOpenIds((prev) => {
