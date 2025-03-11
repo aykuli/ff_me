@@ -23,6 +23,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Build
+        env:
+          REACT_APP_API_URL: ${{ secrets.API_URL }}
+          REACT_APP_CDN_URL: ${{ secrets.CDN_URL }}
+          REACT_APP_TOKEN_LS_NAME: ${{ secrets.TOKEN_LS_NAME }}
         run: |
           npm install
           npm run build
@@ -36,4 +40,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           source: build/*
-          target: ${{secrets.REMOTE_PROJECT_FOLDER}}
+          target: ${{ secrets.REMOTE_PROJECT_FOLDER }}
