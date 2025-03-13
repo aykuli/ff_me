@@ -27,7 +27,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 })
 
-const AddExercise = () => {
+const CreateExercise = () => {
   const { token } = useContext(AuthContext)
 
   const [isUploading, setIsUploading] = useState(false)
@@ -179,4 +179,4 @@ const AddExercise = () => {
   )
 }
 
-export default AddExercise
+export default CreateExercise

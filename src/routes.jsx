@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom"
 
 import Exercises from "./pages/Exercises"
-import AddExercise from "./pages/AddExercise"
+import CreateExercise from "./pages/CreateExercise"
 import Training from "./pages/Training"
 import List from "./pages/Projects"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Dashboard from "./pages/Dashboard"
+import CreateBlock from "./pages/CreateBlock"
 
 const routes = createBrowserRouter([
   {
@@ -22,13 +23,18 @@ const routes = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
+        path: "exercises/create",
+        index: false,
+        element: <CreateExercise />,
+      },
+      {
         path: "exercises",
         element: <Exercises />,
       },
       {
-        path: "exercises/create",
+        path: "blocks/create",
         index: false,
-        element: <AddExercise />,
+        element: <CreateBlock />,
       },
       {
         path: "/projects",
@@ -44,21 +50,12 @@ const routes = createBrowserRouter([
 export default routes
 
 const menuRoutes = [
-  {
-    route: "/",
-    title: "Dashboard",
-  },
-  {
-    route: "/exercises",
-    title: "Exercises",
-  },
-  {
-    route: "/exercises/create",
-    title: "Add Exercise",
-  },
-  {
-    route: "/projects",
-    title: "Projects",
-  },
+  { route: "/", title: "Dashboard" },
+  { route: "/exercises", title: "Exercises" },
+  { route: "/exercises/create", title: "Create exercise" },
+  { route: "/blocks", title: "Blocks" },
+  { route: "/blocks/create", title: "Create block" },
+  { route: "/projects", title: "Projects" },
+  { route: "/projects/create", title: "Create project" },
 ]
 export { menuRoutes }

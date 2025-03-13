@@ -5,7 +5,11 @@ import "./index.css"
 import routes from "./routes"
 import ProtectedRoute from "./components/ProtectedRoute"
 
-export const AuthContext = createContext({ token: null, setToken: null })
+export const AuthContext = createContext({
+  token: null,
+  setToken: null,
+  draftBlock: null,
+})
 
 const App = () => {
   const [token, setToken] = useState(null)
