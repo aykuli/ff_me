@@ -56,7 +56,7 @@ const Item = ({ exercise }) => {
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  const url = `${process.env.REACT_APP_CDN_URL}${exercise.filename}`
+  const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
 
   const src = `${process.env.REACT_APP_API_URL}/exercises`
 
