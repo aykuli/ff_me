@@ -13,7 +13,7 @@ import {
 import { styled } from "@mui/material/styles"
 import { CloudUpload } from "@mui/icons-material"
 
-import { AuthContext } from "../../App"
+import AuthContext from "../../context"
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",

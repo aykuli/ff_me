@@ -1,18 +1,14 @@
-import { createContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
 
 import "./index.css"
 import routes from "./routes"
 import ProtectedRoute from "./components/ProtectedRoute"
-
-export const AuthContext = createContext({
-  token: null,
-  setToken: null,
-  draftBlock: null,
-})
+import AuthContext, { initContext } from "./context"
 
 const App = () => {
   const [token, setToken] = useState(null)
+  // const [draftBlock, setDraftBlock] = useState(null)
 
   useEffect(() => {
     const stToken = localStorage.getItem(process.env.REACT_APP_TOKEN_LS_NAME)
@@ -29,7 +25,7 @@ const App = () => {
   }, [token])
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ ...initContext, token, setToken }}>
       <RouterProvider router={routes}>
         <ProtectedRoute />
       </RouterProvider>

@@ -8,10 +8,10 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { Close } from "@mui/icons-material"
 
 import Item from "./Item"
-import { AuthContext } from "../../App"
+import AuthContext from "../../context"
 
 const Exercises = () => {
-  const { token } = useContext(AuthContext)
+  const { token, addBlockExercise } = useContext(AuthContext)
 
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)

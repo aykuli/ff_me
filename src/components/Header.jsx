@@ -14,10 +14,11 @@ import { Logout, OtherHouses } from "@mui/icons-material"
 import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
-import { AuthContext } from "../App"
+import AuthContext from "../context"
+import DraftBlockAlert from "./DraftBlockAlert"
 
 const Header = ({ children }) => {
-  const { token, setToken } = useContext(AuthContext)
+  const { token, setToken, draftBlock } = useContext(AuthContext)
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [open, setOpen] = useState(Boolean(anchorEl))
@@ -63,6 +64,7 @@ const Header = ({ children }) => {
           p: 2,
         }}
       >
+        {draftBlock && <DraftBlockAlert block={draftBlock} />}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             edge="end"

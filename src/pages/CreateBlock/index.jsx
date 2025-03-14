@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 import {
@@ -10,43 +11,37 @@ import {
   Grid2 as Grid,
   CircularProgress,
   Slider,
+  Typography,
 } from "@mui/material"
 
-import { AuthContext } from "../../App"
-import { Typography } from "@mui/joy"
+import AuthContext from "../../context"
+import { full, initBody, buildRequest } from "./helpers"
 
 const CreateBlock = () => {
-  const { token } = useContext(AuthContext)
+  const { token, setDraftBlock } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const [isUploading, setIsUploading] = useState(false)
+  const [saveBtnDisabled, setSaveBtnDisabled] = useState(true)
   const [openSnackbar, setOpenSb] = useState(false)
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  const [file, setFile] = useState(undefined)
-  const [titleEn, setTitleEn] = useState(undefined)
-  const [titleRu, setTitleRu] = useState(undefined)
-  const [saveBtnDisabled, setSaveBtnDisabled] = useState(true)
+  const [body, setBody] = useState(initBody)
 
   useEffect(() => {
-    if (file && titleEn && titleRu) {
-      setSaveBtnDisabled(false)
-    }
-  }, [file, titleEn, titleRu])
+    setSaveBtnDisabled(!full(body))
+  }, [body, body.titleEn, body.titleRu])
 
   const handleSave = () => {
     setIsUploading(true)
-    const data = new FormData()
-    data.append("file", file)
-    data.append("title_en", titleEn)
-    data.append("title_ru", titleRu)
 
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_API_URL}/exercises/create`,
-      data,
+      url: `${process.env.REACT_APP_API_URL}/blocks/create`,
+      data: buildRequest(body),
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*", // todo change
         Authorization: token,
       },
@@ -54,9 +49,7 @@ const CreateBlock = () => {
       .then((response) => {
         setSbMsg("Successfully saved")
         setSbType("success")
-        setTitleEn("")
-        setTitleRu("")
-        setFile(undefined)
+        setBody(initBody)
       })
       .catch((e) => {
         setSbMsg("Exercise save error: " + e)
@@ -66,24 +59,34 @@ const CreateBlock = () => {
         setOpenSb(true)
         setSaveBtnDisabled(true)
         setIsUploading(false)
+        setDraftBlock(body)
+        navigate("/exercises")
       })
   }
 
-  const handleTxtInputValue = (type, e) => {
-    const v = e.target.value
-    if (v.length > 3) {
-      switch (type) {
-        case "titleEn":
-          setTitleEn(v)
-          break
-        case "titleRu":
-          setTitleRu(v)
-          break
-        default:
-          console.log("try harder")
-      }
+  const handleTxtInputValue = (type, v) => {
+    if (!body[type]) {
+      return
     }
+
+    setBody((prev) => {
+      if (["totalDuration", "onTime"].includes(type) && v === 0) {
+        return prev
+      }
+
+      prev[type] = v
+      const totalDuration = type === "totalDuration" ? v : prev.totalDuration
+      const onTime = type === "onTime" ? v : prev.onTime
+      const relaxTime = type === "relaxTime" ? v : prev.relaxTime
+
+      return {
+        ...prev,
+        [type]: v,
+        exercisesCount: (totalDuration * 60) / (onTime + relaxTime),
+      }
+    })
   }
+
   const handleCloseSb = () => {
     setOpenSb(false)
     setSbMsg("")
@@ -114,65 +117,83 @@ const CreateBlock = () => {
         <Grid direction="column" container rowSpacing={4}>
           <Grid size={"100%"}>
             <TextField
+              value={body.titleEn}
               fullWidth
               id="title_en"
               label="title english"
               variant="outlined"
-              onChange={(e) => handleTxtInputValue("titleEn", e)}
+              onChange={(e) => handleTxtInputValue("titleEn", e.target.value)}
             />
           </Grid>
           <Grid size={"100%"}>
             <TextField
+              value={body.titleRu}
               fullWidth
               id="title_ru"
               label="title russian"
               variant="outlined"
-              onChange={(e) => handleTxtInputValue("titleRu", e)}
+              onChange={(e) => handleTxtInputValue("titleRu", e.target.value)}
             />
           </Grid>
           <Grid size={"100%"}>
             <TextField
+              value={body.totalDuration}
+              defaultValue={body.totalDuration}
+              onChange={(e) =>
+                handleTxtInputValue("totalDuration", e.target.value)
+              }
               fullWidth
               type="number"
               id="total_duration"
               label="Total duration time (minutes)"
               variant="outlined"
-              onChange={(e) => handleTxtInputValue("totalDuration", e)}
             />
           </Grid>
           <Grid size={"100%"}>
             <TextField
+              value={body.exercisesCount}
+              disabled
               fullWidth
               type="number"
               id="exercises count"
               label="Exercises quantity"
               variant="outlined"
-              onChange={(e) => handleTxtInputValue("exercisesCount", e)}
             />
           </Grid>
           <Grid size={"100%"} sx={{ mt: 2 }}>
-            <Typography level="title-md">On time (seconds)</Typography>
+            <Typography component={"span"} sx={{ pr: 1 }}>
+              {body.onTime}
+            </Typography>
+            <Typography level="body-md" component={"span"}>
+              seconds ON time
+            </Typography>
             <Slider
               aria-label="onTime"
-              defaultValue={30}
-              value={50}
-              // getAriaValueText={valuetext}
+              defaultValue={initBody.onTime}
+              value={body.onTime}
+              onChangeCommitted={(e, v) => handleTxtInputValue("onTime", v)}
               valueLabelDisplay="auto"
-              shiftStep={30}
+              shiftStep={10}
               step={10}
               marks
-              min={10}
+              min={20}
               max={60}
             />
           </Grid>
-          <Grid size={"100%"}>
-            <Typography level="title-md">Relax time (seconds)</Typography>
+          <Grid size={"100%"} sx={{ mt: 2 }}>
+            <Typography component={"span"} sx={{ pr: 1 }}>
+              {body.relaxTime}
+            </Typography>
+            <Typography level="body-md" component={"span"}>
+              seconds RELAX time
+            </Typography>
             <Slider
-              aria-label="onTime"
-              defaultValue={30}
-              // getAriaValueText={valuetext}
+              aria-label="relaxTime"
+              defaultValue={initBody.relaxTime}
+              value={body.relaxTime}
+              onChangeCommitted={(e, v) => handleTxtInputValue("relaxTime", v)}
               valueLabelDisplay="auto"
-              shiftStep={30}
+              shiftStep={10}
               step={10}
               marks
               min={0}
@@ -186,8 +207,8 @@ const CreateBlock = () => {
               variant="contained"
               tabIndex={-1}
               fullWidth
-              color="danger"
-              onClick={handleSave}
+              color="warning"
+              onClick={() => setBody(initBody)}
               disabled={saveBtnDisabled || isUploading}
             >
               Discard
