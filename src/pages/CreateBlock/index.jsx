@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 import {
-  Snackbar,
-  Alert,
   Button,
   Box,
   TextField,
@@ -15,17 +13,16 @@ import {
 } from "@mui/material"
 
 import AuthContext from "../../context"
-import { full, initBody, buildRequest } from "./helpers"
+import { full, initBody } from "./helpers"
+import { buildRequest } from "../../helpers/block_helpers"
 
 const CreateBlock = () => {
-  const { token, setDraftBlock } = useContext(AuthContext)
+  const { token, setDraftBlock, snackbar } = useContext(AuthContext)
+  const { setOpen, setMsg, setType } = snackbar
   const navigate = useNavigate()
 
   const [isUploading, setIsUploading] = useState(false)
   const [saveBtnDisabled, setSaveBtnDisabled] = useState(true)
-  const [openSnackbar, setOpenSb] = useState(false)
-  const [sbMsg, setSbMsg] = useState("")
-  const [sbType, setSbType] = useState("success")
 
   const [body, setBody] = useState(initBody)
 
@@ -47,25 +44,25 @@ const CreateBlock = () => {
       },
     })
       .then((response) => {
-        setSbMsg("Successfully saved")
-        setSbType("success")
-        setBody(initBody)
+        setMsg("Successfully saved")
+        setType("success")
+
+        setDraftBlock({ ...body, id: response.data.id })
+        navigate("/exercises")
       })
       .catch((e) => {
-        setSbMsg("Exercise save error: " + e)
-        setSbType("error")
+        setMsg("Exercise save error: " + e)
+        setType("error")
       })
       .finally(() => {
-        setOpenSb(true)
+        setOpen(true)
         setSaveBtnDisabled(true)
         setIsUploading(false)
-        setDraftBlock(body)
-        navigate("/exercises")
       })
   }
 
   const handleTxtInputValue = (type, v) => {
-    if (!body[type]) {
+    if (body[type] === undefined) {
       return
     }
 
@@ -79,35 +76,18 @@ const CreateBlock = () => {
       const onTime = type === "onTime" ? v : prev.onTime
       const relaxTime = type === "relaxTime" ? v : prev.relaxTime
 
-      return {
+      const res = {
         ...prev,
         [type]: v,
         exercisesCount: (totalDuration * 60) / (onTime + relaxTime),
       }
-    })
-  }
 
-  const handleCloseSb = () => {
-    setOpenSb(false)
-    setSbMsg("")
+      return res
+    })
   }
 
   return (
     <>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSb}
-      >
-        <Alert
-          onClose={handleCloseSb}
-          severity={sbType}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
-          {sbMsg}
-        </Alert>
-      </Snackbar>
       <Box
         sx={{ width: "100%" }}
         component="form"

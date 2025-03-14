@@ -2,8 +2,6 @@ import React, { useEffect, useState, useContext } from "react"
 import axios from "axios"
 
 import {
-  Snackbar,
-  Alert,
   Button,
   Box,
   TextField,
@@ -28,12 +26,10 @@ const VisuallyHiddenInput = styled("input")({
 })
 
 const CreateExercise = () => {
-  const { token } = useContext(AuthContext)
+  const { token, snackbar } = useContext(AuthContext)
+  const { setOpen, setMsg, setType } = snackbar
 
   const [isUploading, setIsUploading] = useState(false)
-  const [openSnackbar, setOpenSb] = useState(false)
-  const [sbMsg, setSbMsg] = useState("")
-  const [sbType, setSbType] = useState("success")
 
   const [file, setFile] = useState(undefined)
   const [titleEn, setTitleEn] = useState(undefined)
@@ -64,18 +60,18 @@ const CreateExercise = () => {
       },
     })
       .then((response) => {
-        setSbMsg("Successfully saved")
-        setSbType("success")
+        setMsg("Successfully saved")
+        setType("success")
         setTitleEn("")
         setTitleRu("")
         setFile(undefined)
       })
       .catch((e) => {
-        setSbMsg("Exercise save error: " + e)
-        setSbType("error")
+        setMsg("Exercise save error: " + e)
+        setType("error")
       })
       .finally(() => {
-        setOpenSb(true)
+        setOpen(true)
         setSaveBtnDisabled(true)
         setIsUploading(false)
       })
@@ -96,86 +92,61 @@ const CreateExercise = () => {
       }
     }
   }
-  const handleCloseSb = () => {
-    setOpenSb(false)
-    setSbMsg("")
-  }
 
   return (
-    <>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSb}
-      >
-        <Alert
-          onClose={handleCloseSb}
-          severity={sbType}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
-          {sbMsg}
-        </Alert>
-      </Snackbar>
-      <Box
-        sx={{ width: "100%" }}
-        component="form"
-        noValidate
-        autoComplete="off"
-      >
-        <Grid direction="column" container rowSpacing={2}>
-          <Grid size={"100%"}>
-            <TextField
-              fullWidth
-              id="title_en"
-              label="title english"
-              variant="outlined"
-              onChange={(e) => handleTxtInputValue("titleEn", e)}
-            />
-          </Grid>
-          <Grid size={"100%"}>
-            <TextField
-              fullWidth
-              id="title_ru"
-              label="title russian"
-              variant="outlined"
-              onChange={(e) => handleTxtInputValue("titleRu", e)}
-            />
-          </Grid>
-          <Grid size={"100%"}>
-            <Button
-              fullWidth
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<CloudUpload />}
-            >
-              Upload file
-              <VisuallyHiddenInput
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                multiple
-              />
-            </Button>
-          </Grid>
-          <Grid size={"100%"} style={{ marginTop: "6vh" }}>
-            <Button
-              component="button"
-              variant="contained"
-              tabIndex={-1}
-              fullWidth
-              color="success"
-              onClick={handleSave}
-              disabled={saveBtnDisabled}
-            >
-              {isUploading ? <CircularProgress size="small" /> : null}
-              Save
-            </Button>
-          </Grid>
+    <Box sx={{ width: "100%" }} component="form" noValidate autoComplete="off">
+      <Grid direction="column" container rowSpacing={2}>
+        <Grid size={"100%"}>
+          <TextField
+            fullWidth
+            id="title_en"
+            label="title english"
+            variant="outlined"
+            onChange={(e) => handleTxtInputValue("titleEn", e)}
+          />
         </Grid>
-      </Box>
-    </>
+        <Grid size={"100%"}>
+          <TextField
+            fullWidth
+            id="title_ru"
+            label="title russian"
+            variant="outlined"
+            onChange={(e) => handleTxtInputValue("titleRu", e)}
+          />
+        </Grid>
+        <Grid size={"100%"}>
+          <Button
+            fullWidth
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+          >
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              multiple
+            />
+          </Button>
+        </Grid>
+        <Grid size={"100%"} style={{ marginTop: "6vh" }}>
+          <Button
+            component="button"
+            variant="contained"
+            tabIndex={-1}
+            fullWidth
+            color="success"
+            onClick={handleSave}
+            disabled={saveBtnDisabled}
+          >
+            {isUploading ? <CircularProgress size="small" /> : null}
+            Save
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   )
 }
 
