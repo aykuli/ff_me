@@ -66,7 +66,6 @@ const Training = () => {
   const [tr, setTr] = useState(null)
 
   useEffect(() => {
-    console.log(params.id)
     setTr(training)
   }, [params.id])
 

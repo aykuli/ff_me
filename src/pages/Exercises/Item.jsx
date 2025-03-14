@@ -47,7 +47,7 @@ function CustomLabel({ lang, title, isEdit, onEdit, onSave, ...props }) {
   )
 }
 
-const Item = ({ exercise }) => {
+const Item = ({ exercise, onAdd, included }) => {
   const [value, setV] = useState(exercise)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditEn, setIsEditEn] = useState(false)
@@ -112,7 +112,7 @@ const Item = ({ exercise }) => {
     setSbMsg("")
   }
 
-  const handleDel = (id) => {
+  const handleDel = () => {
     axios({
       method: "DELETE",
       url: `${src}/${value.id}`,
@@ -138,12 +138,13 @@ const Item = ({ exercise }) => {
       })
   }
 
-  const handleAdd = (id) => {
-    console.log("there will be adding to the block functionality")
-  }
-
   return (
-    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+    <Box
+      sx={{
+        width: "100%",
+        bgcolor: "background.paper",
+      }}
+    >
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -193,17 +194,13 @@ const Item = ({ exercise }) => {
               variant="contained"
               edge="end"
               size="small"
-              onClick={() => handleAdd(value.id)}
-              color="primary"
+              onClick={() => onAdd(value.id)}
+              color={included ? "secondary" : "primary"}
             >
               <Add />
             </Button>
 
-            <IconButton
-              edge="end"
-              size="small"
-              onClick={() => handleDel(value.id)}
-            >
+            <IconButton edge="end" size="small" onClick={handleDel}>
               <Delete />
             </IconButton>
           </div>

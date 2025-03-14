@@ -6,7 +6,8 @@ import { Container } from "@mui/material"
 
 import AuthForm from "../../components/AuthForm"
 import ProtectedRoute from "../../components/ProtectedRoute"
-import { AuthContext } from "../../App"
+
+import AuthContext from "../../context"
 
 const Login = () => {
   const { setToken } = useContext(AuthContext)
