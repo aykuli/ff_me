@@ -34,7 +34,11 @@ const Dashboard = () => {
             <Grid direction="column" container rowSpacing={5}>
               {menuRoutes.slice(1).map(({ route, title }, i) => {
                 return (
-                  <Item elevation={5} sx={{ mb: i % 2 === 0 ? 1 : 5 }}>
+                  <Item
+                    key={route}
+                    elevation={5}
+                    sx={{ mb: i % 2 === 0 ? 1 : 5 }}
+                  >
                     <NavLink to={route} end>
                       <Typography level="h3">{title}</Typography>
                     </NavLink>

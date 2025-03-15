@@ -63,12 +63,7 @@ const Header = ({ children }) => {
   return (
     <>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSb}>
-        <Alert
-          onClose={handleCloseSb}
-          severity={type}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleCloseSb} severity={type} sx={{ width: "100%" }}>
           {msg}
         </Alert>
       </Snackbar>
@@ -126,7 +121,7 @@ const Header = ({ children }) => {
               return (
                 <MenuItem
                   disabled={route === currRoute}
-                  id={title}
+                  key={route}
                   onClick={() => navigate(route)}
                 >
                   {title}

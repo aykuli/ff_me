@@ -118,7 +118,6 @@ const CreateBlock = () => {
           <Grid size={"100%"}>
             <TextField
               value={body.totalDuration}
-              defaultValue={body.totalDuration}
               onChange={(e) =>
                 handleTxtInputValue("totalDuration", e.target.value)
               }
@@ -149,7 +148,6 @@ const CreateBlock = () => {
             </Typography>
             <Slider
               aria-label="onTime"
-              defaultValue={initBody.onTime}
               value={body.onTime}
               onChangeCommitted={(e, v) => handleTxtInputValue("onTime", v)}
               valueLabelDisplay="auto"
@@ -169,7 +167,6 @@ const CreateBlock = () => {
             </Typography>
             <Slider
               aria-label="relaxTime"
-              defaultValue={initBody.relaxTime}
               value={body.relaxTime}
               onChangeCommitted={(e, v) => handleTxtInputValue("relaxTime", v)}
               valueLabelDisplay="auto"
