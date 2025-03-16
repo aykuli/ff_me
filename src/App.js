@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
+import { ThemeProvider } from "@mui/material/styles"
 
 import "./index.css"
 import routes from "./routes"
 import ProtectedRoute from "./components/ProtectedRoute"
-import AuthContext from "./context"
+import { materialTheme } from "./theme"
+
+export const AuthContext = createContext({ token: null, setToken: null })
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -34,27 +37,29 @@ const App = () => {
   }, [token])
 
   return (
-    <AuthContext.Provider
-      value={{
-        token,
-        setToken,
-        draftBlock,
-        setDraftBlock,
-        addBlockExercise,
-        snackbar: {
-          open: openSnackbar,
-          setOpen: setOpenSb,
-          msg: sbMsg,
-          setMsg: setSbMsg,
-          type: sbType,
-          setType: setSbType,
-        },
-      }}
-    >
-      <RouterProvider router={routes}>
-        <ProtectedRoute />
-      </RouterProvider>
-    </AuthContext.Provider>
+    <ThemeProvider theme={materialTheme}>
+      <AuthContext.Provider
+        value={{
+          token,
+          setToken,
+          draftBlock,
+          setDraftBlock,
+          addBlockExercise,
+          snackbar: {
+            open: openSnackbar,
+            setOpen: setOpenSb,
+            msg: sbMsg,
+            setMsg: setSbMsg,
+            type: sbType,
+            setType: setSbType,
+          },
+        }}
+      >
+        <RouterProvider router={routes}>
+          <ProtectedRoute />
+        </RouterProvider>
+      </AuthContext.Provider>
+    </ThemeProvider>
   )
 }
 export default App
