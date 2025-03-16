@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
-import { ThemeProvider } from "@mui/material/styles"
+import { ThemeProvider, THEME_ID } from "@mui/material/styles"
+import CssBaseline from "@mui/material/CssBaseline"
 
 import "./index.css"
 import routes from "./routes"
-import ProtectedRoute from "./components/ProtectedRoute"
+import AuthContext from "./context"
 import { materialTheme } from "./theme"
-
-export const AuthContext = createContext({ token: null, setToken: null })
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -37,7 +37,8 @@ const App = () => {
   }, [token])
 
   return (
-    <ThemeProvider theme={materialTheme}>
+    <>
+      <CssBaseline />
       <AuthContext.Provider
         value={{
           token,
@@ -59,7 +60,7 @@ const App = () => {
           <ProtectedRoute />
         </RouterProvider>
       </AuthContext.Provider>
-    </ThemeProvider>
+    </>
   )
 }
 export default App
