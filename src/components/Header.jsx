@@ -9,18 +9,22 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material"
 import { Logout, OtherHouses } from "@mui/icons-material"
 import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
-import { AuthContext } from "../App"
+import AuthContext from "../context"
+import DraftBlockAlert from "./DraftBlockAlert"
 
 const Header = ({ children }) => {
-  const { token, setToken } = useContext(AuthContext)
+  const { token, setToken, draftBlock, snackbar } = useContext(AuthContext)
+  const { open, setOpen, msg, setMsg, type } = snackbar
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const [open, setOpen] = useState(Boolean(anchorEl))
+  const [openMn, setOpenMn] = useState(Boolean(anchorEl))
   const [currRoute, setCurrRoute] = useState("")
   const [currTitle, setCurrTitle] = useState("")
   const location = useLocation()
@@ -51,71 +55,84 @@ const Header = ({ children }) => {
     })
   }
 
-  return (
-    <Container maxWidth="md" style={{ marginTop: "5vw" }}>
-      <Box
-        sx={{
-          width: "calc(100%-",
-          maxWidth: 640,
-          bgcolor: "background.paper",
-          boxShadow: 1,
-          borderRadius: 2,
-          p: 2,
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            edge="end"
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={(e) => {
-              setAnchorEl(open ? null : e.currentTarget)
-              setOpen(!open)
-            }}
-          >
-            <OtherHouses />
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={() => logout()}
-          >
-            <Logout />
-          </IconButton>
-        </div>
-        <Divider style={{ marginBottom: "3vh" }} />
-        <Typography level="h3" style={{ marginBottom: "2vh" }}>
-          {currTitle}
-        </Typography>
+  const handleCloseSb = () => {
+    setOpen(false)
+    setMsg("")
+  }
 
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => setOpen(false)}
+  return (
+    <>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSb}>
+        <Alert onClose={handleCloseSb} severity={type} sx={{ width: "100%" }}>
+          {msg}
+        </Alert>
+      </Snackbar>
+      <Container maxWidth="md" style={{ marginTop: "5vw" }}>
+        <Box
+          sx={{
+            width: "calc(100%-",
+            maxWidth: 640,
+            bgcolor: "background.paper",
+            boxShadow: 1,
+            borderRadius: 2,
+            p: 2,
+          }}
         >
-          {menuRoutes.map(({ route, title }) => {
-            return (
-              <MenuItem
-                disabled={route === currRoute}
-                id={title}
-                onClick={() => navigate(route)}
-              >
-                {title}
-              </MenuItem>
-            )
-          })}
-        </Menu>
-        {children}
-      </Box>
-    </Container>
+          {draftBlock && <DraftBlockAlert block={draftBlock} />}
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <IconButton
+              edge="end"
+              aria-label="more"
+              id="long-button"
+              aria-controls={openMn ? "long-menu" : undefined}
+              aria-expanded={openMn ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={(e) => {
+                setAnchorEl(openMn ? null : e.currentTarget)
+                setOpenMn(!openMn)
+              }}
+            >
+              <OtherHouses />
+            </IconButton>
+            <IconButton
+              edge="end"
+              aria-label="more"
+              id="long-button"
+              aria-controls={openMn ? "long-menu" : undefined}
+              aria-expanded={openMn ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={() => logout()}
+            >
+              <Logout />
+            </IconButton>
+          </div>
+          <Divider style={{ marginBottom: "3vh" }} />
+          <Typography level="h3" style={{ marginBottom: "2vh" }}>
+            {currTitle}
+          </Typography>
+
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openMn}
+            onClose={() => setOpenMn(false)}
+          >
+            {menuRoutes.map(({ route, title }) => {
+              return (
+                <MenuItem
+                  disabled={route === currRoute}
+                  key={route}
+                  onClick={() => navigate(route)}
+                >
+                  {title}
+                </MenuItem>
+              )
+            })}
+          </Menu>
+          {children}
+        </Box>
+      </Container>
+    </>
   )
 }
 

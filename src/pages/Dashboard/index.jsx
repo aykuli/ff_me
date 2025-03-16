@@ -5,6 +5,7 @@ import { Container, Box, Paper, Grid2 as Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { Typography } from "@mui/joy"
 import ProtectedRoute from "../../components/ProtectedRoute"
+import { menuRoutes } from "../../routes"
 
 const Item = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -21,13 +22,6 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }))
 
-const links = [
-  { route: "/exercises/create", title: "Add Exercise" },
-  { route: "/exercises", title: "Exercises" },
-  { route: "/projects/create", title: "Create project" },
-  { route: "/projects", title: "Projects" },
-]
-
 const Dashboard = () => {
   const location = useLocation()
 
@@ -35,18 +29,20 @@ const Dashboard = () => {
     <>
       <ProtectedRoute />
       {location.pathname === "/" ? (
-        <Container maxWidth="md" style={{ marginTop: "60px" }}>
+        <Container maxWidth="md" sx={{ mt: 2 }}>
           <Box sx={{ width: "100%" }}>
             <Grid direction="column" container rowSpacing={5}>
-              {links.map(({ route, title }) => {
+              {menuRoutes.slice(1).map(({ route, title }, i) => {
                 return (
-                  <Grid size={"100%"} id={route}>
-                    <Item elevation={5}>
-                      <NavLink to={route} end>
-                        <Typography level="h3">{title}</Typography>
-                      </NavLink>
-                    </Item>
-                  </Grid>
+                  <Item
+                    key={route}
+                    elevation={5}
+                    sx={{ mb: i % 2 === 0 ? 1 : 5 }}
+                  >
+                    <NavLink to={route} end>
+                      <Typography level="h3">{title}</Typography>
+                    </NavLink>
+                  </Item>
                 )
               })}
             </Grid>

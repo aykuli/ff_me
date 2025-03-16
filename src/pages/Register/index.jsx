@@ -4,8 +4,9 @@ import axios from "axios"
 
 import { Container } from "@mui/material"
 
-import { AuthContext } from "../../App"
 import AuthForm from "../../components/AuthForm"
+
+import AuthContext from "../../context"
 
 const Register = () => {
   const { setToken } = useContext(AuthContext)
