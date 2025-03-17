@@ -8,6 +8,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Dashboard from "./pages/Dashboard"
 import CreateBlock from "./pages/CreateBlock"
+import BlocksList from "./pages/BlocksList"
 
 const routes = createBrowserRouter([
   {
@@ -35,6 +36,11 @@ const routes = createBrowserRouter([
         path: "blocks/create",
         index: false,
         element: <CreateBlock />,
+      },
+      {
+        path: "blocks",
+        index: false,
+        element: <BlocksList />,
       },
       {
         path: "/projects",

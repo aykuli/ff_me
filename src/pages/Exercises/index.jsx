@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 
 import { Box, List, CircularProgress } from "@mui/material"
@@ -21,10 +21,14 @@ const Exercises = () => {
   const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
 
   useEffect(() => {
+    if (!token) {
+      return
+    }
     setIsLoading(true)
     axios({
-      method: "get",
+      method: "POST",
       url: `${process.env.REACT_APP_API_URL}/exercises/list`,
+      data: { updatedAt: "desc" },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -44,6 +48,7 @@ const Exercises = () => {
     if (!draftBlock) {
       return
     }
+
     addBlockExercise(exercise_id)
 
     axios({
@@ -98,7 +103,7 @@ const Exercises = () => {
                       open={openIds.includes(idx)}
                       exercise={exercise}
                       onAdd={saveBlockExercise}
-                      included={draftBlock.exercisesIds.includes(exercise.id)}
+                      included={draftBlock?.exercisesIds.includes(exercise.id)}
                     />
                   </TreeItem>
                 </SimpleTreeView>
