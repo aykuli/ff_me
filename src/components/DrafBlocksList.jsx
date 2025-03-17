@@ -9,9 +9,19 @@ import {
   AccordionGroup,
   AccordionDetails,
   AccordionSummary,
-  Sheet,
+  ListItemContent,
+  Avatar,
+  Typography,
 } from "@mui/joy"
-import { Alert, Box, Divider, Typography } from "@mui/material"
+import { Box, Divider } from "@mui/material"
+import {
+  SimCardAlert,
+  AccessibilityNewRounded,
+  Timer,
+  RadioButtonChecked,
+  RadioButtonUnchecked,
+} from "@mui/icons-material"
+
 import AuthContext from "../context"
 
 const DraftBlocksList = () => {
@@ -50,10 +60,18 @@ const DraftBlocksList = () => {
     <>
       {draftBlocks.length > 0 ? (
         <Box sx={{ width: "100%", mb: 1 }}>
-          <Alert color="warning">You have draft blocks</Alert>
-          <AccordionGroup size="sm" variant="plain">
+          <AccordionGroup size="sm" variant="soft" color="warning">
             <Accordion>
-              <AccordionSummary>Draft blocks</AccordionSummary>
+              <AccordionSummary>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Avatar color="warning">
+                    <SimCardAlert color="warning" />
+                  </Avatar>
+                  <Typography component={"span"}>
+                    You have draft blocks
+                  </Typography>
+                </div>
+              </AccordionSummary>
               <AccordionDetails>
                 {draftBlocks?.map(
                   ({
@@ -69,27 +87,78 @@ const DraftBlocksList = () => {
                     const totalExercises =
                       (totalDuration * 60) / (onTime + relaxTime)
                     return (
-                      <div key={id} color="info" variant="outlined">
-                        <NavLink
-                          to={`blocks/${id}`}
-                          end
-                          style={{ color: theme.palette.primary.dark }}
-                        >
-                          <p>{titleEn}</p>
-                        </NavLink>
-                        <NavLink
-                          to={`blocks/${id}`}
-                          end
-                          style={{ color: theme.palette.primary.dark }}
-                        >
-                          <p>{titleRu}</p>
-                        </NavLink>
-                        <p>{`${totalDuration} minutes duration`}</p>
-                        <p>{`${onTime} seconds ON`}</p>
-                        <p>{`${relaxTime} seconds ON`}</p>
-                        <p>{`${exercisesIds?.length} of ${totalExercises} chosen`}</p>
+                      <div key={id} style={{ marginTop: 10 }}>
+                        <div style={{ display: "flex", marginBottom: 10 }}>
+                          <Avatar color="warning">
+                            <AccessibilityNewRounded />
+                          </Avatar>
 
-                        <p>{`created at ${createdAt}`}</p>
+                          <ListItemContent>
+                            <NavLink
+                              to={`blocks/${id}`}
+                              end
+                              style={{ color: theme.palette.primary.dark }}
+                            >
+                              <Typography level="title-md">
+                                {titleEn}
+                              </Typography>
+                            </NavLink>
+                            <NavLink
+                              to={`blocks/${id}`}
+                              end
+                              style={{ color: theme.palette.primary.dark }}
+                            >
+                              <Typography level="body-sm">{titleRu}</Typography>
+                            </NavLink>
+                          </ListItemContent>
+                        </div>
+                        <div style={{ marginLeft: 39 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "end",
+                              marginBottom: 10,
+                              marginRight: 10,
+                            }}
+                          >
+                            <Timer color="warning" />
+                            <span>{`${totalDuration} minutes duration`}</span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "end",
+                              marginBottom: 10,
+                              marginRight: 10,
+                            }}
+                          >
+                            <RadioButtonChecked color="success" />
+                            <span>{`${onTime} seconds`}</span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "end",
+                              marginBottom: 10,
+                              marginRight: 10,
+                            }}
+                          >
+                            <RadioButtonUnchecked color="success" />
+                            <span>{`${relaxTime} seconds`}</span>
+                          </div>
+
+                          <div>
+                            <span style={{ fontWeight: 900 }}>
+                              {exercisesIds?.length || 0}
+                            </span>
+                            <span> of </span>
+                            <span style={{ fontWeight: 900 }}>
+                              {totalExercises}
+                            </span>
+                            <span> exercises chosen</span>
+                          </div>
+                          <p>{`created at ${createdAt}`}</p>
+                        </div>
                         <Divider />
                       </div>
                     )
@@ -100,8 +169,6 @@ const DraftBlocksList = () => {
           </AccordionGroup>
         </Box>
       ) : null}
-
-      <Divider />
     </>
   )
 }
