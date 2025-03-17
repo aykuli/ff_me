@@ -1,33 +1,25 @@
 import { useEffect, useContext, useState } from "react"
-import { NavLink } from "react-router"
-import { useLocation } from "react-router-dom"
 import axios from "axios"
 
-import { useTheme } from "@mui/material"
 import {
   Accordion,
   AccordionGroup,
   AccordionDetails,
   AccordionSummary,
-  ListItemContent,
   Avatar,
   Typography,
 } from "@mui/joy"
-import { Box, Divider } from "@mui/material"
+import { Box } from "@mui/material"
 import {
   SimCardAlert,
-  AccessibilityNewRounded,
-  Timer,
-  RadioButtonChecked,
-  RadioButtonUnchecked,
 } from "@mui/icons-material"
 
 import AuthContext from "../context"
+import DraftBlock from "./DraftBlock"
 
 const DraftBlocksList = () => {
   const { token, draftBlock, setDraftBlock, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
-  const theme = useTheme()
 
   const [draftBlocks, setBlocks] = useState([])
 
@@ -59,7 +51,7 @@ const DraftBlocksList = () => {
   return (
     <>
       {draftBlocks.length > 0 ? (
-        <Box sx={{ width: "100%", mb: 1 }}>
+        <Box sx={{ width: "100%", mb: 4 }}>
           <AccordionGroup size="sm" variant="soft" color="warning">
             <Accordion>
               <AccordionSummary>
@@ -73,97 +65,13 @@ const DraftBlocksList = () => {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                {draftBlocks?.map(
-                  ({
-                    id,
-                    titleEn,
-                    titleRu,
-                    totalDuration,
-                    onTime,
-                    relaxTime,
-                    exercisesIds,
-                    createdAt,
-                  }) => {
-                    const totalExercises =
-                      (totalDuration * 60) / (onTime + relaxTime)
-                    return (
-                      <div key={id} style={{ marginTop: 10 }}>
-                        <div style={{ display: "flex", marginBottom: 10 }}>
-                          <Avatar color="warning">
-                            <AccessibilityNewRounded />
-                          </Avatar>
-
-                          <ListItemContent>
-                            <NavLink
-                              to={`blocks/${id}`}
-                              end
-                              style={{ color: theme.palette.primary.dark }}
-                            >
-                              <Typography level="title-md">
-                                {titleEn}
-                              </Typography>
-                            </NavLink>
-                            <NavLink
-                              to={`blocks/${id}`}
-                              end
-                              style={{ color: theme.palette.primary.dark }}
-                            >
-                              <Typography level="body-sm">{titleRu}</Typography>
-                            </NavLink>
-                          </ListItemContent>
-                        </div>
-                        <div style={{ marginLeft: 39 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "end",
-                              marginBottom: 10,
-                              marginRight: 10,
-                            }}
-                          >
-                            <Timer color="warning" />
-                            <span>{`${totalDuration} minutes duration`}</span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "end",
-                              marginBottom: 10,
-                              marginRight: 10,
-                            }}
-                          >
-                            <RadioButtonChecked color="success" />
-                            <span>{`${onTime} seconds`}</span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "end",
-                              marginBottom: 10,
-                              marginRight: 10,
-                            }}
-                          >
-                            <RadioButtonUnchecked color="success" />
-                            <span>{`${relaxTime} seconds`}</span>
-                          </div>
-
-                          <div>
-                            <span style={{ fontWeight: 900 }}>
-                              {exercisesIds?.length || 0}
-                            </span>
-                            <span> of </span>
-                            <span style={{ fontWeight: 900 }}>
-                              {totalExercises}
-                            </span>
-                            <span> exercises chosen</span>
-                          </div>
-                          <p>{`created at ${createdAt}`}</p>
-                        </div>
-                        <Divider />
-                      </div>
-                    )
-                  }
-                )}
+                {draftBlocks?.map((block, index) => {
+                  return (
+                    <DraftBlock
+                      {...{ block, last: index + 1 === draftBlocks?.length }}
+                    />
+                  )
+                })}
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>
