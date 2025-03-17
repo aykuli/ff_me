@@ -1,60 +1,9 @@
-import React, { useState, useContext } from "react"
+import { useState, useContext } from "react"
 import axios from "axios"
 import { Box, CircularProgress, IconButton, Button } from "@mui/material"
-import { Stack, TextField, Typography } from "@mui/material"
-import { Add, Delete, EditOutlined, PanoramaFishEye } from "@mui/icons-material"
+import { Add, Delete } from "@mui/icons-material"
 import AuthContext from "../context"
-
-function CustomLabel({
-  lang,
-  title,
-  isEdit,
-  onEdit,
-  onSave,
-  editable,
-  ...props
-}) {
-  const [value, setValue] = useState(title)
-  return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      flexGrow={1}
-      {...props}
-    >
-      {isEdit ? (
-        <TextField
-          fullWidth
-          id={title}
-          label={lang}
-          variant="outlined"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value)
-          }}
-        />
-      ) : (
-        <Typography variant="body" sx={{ fontSize: "xl", mb: 0.5, mt: 2 }}>
-          {title}
-        </Typography>
-      )}
-      {editable ? (
-        <IconButton
-          onClick={isEdit ? () => onSave(value) : onEdit}
-          aria-label="select item"
-          size="small"
-        >
-          {!isEdit ? (
-            <EditOutlined fontSize="inherit" color="primary" />
-          ) : (
-            <PanoramaFishEye fontSize="inherit" color="primary" />
-          )}
-        </IconButton>
-      ) : null}
-    </Stack>
-  )
-}
+import CustomLabel from "../components/CustimTitleLabel"
 
 const Item = ({ exercise, onAdd, included, editable }) => {
   const { token, snackbar } = useContext(AuthContext)
@@ -85,6 +34,7 @@ const Item = ({ exercise, onAdd, included, editable }) => {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*", // todo change
+        Authorization: token,
       },
     })
       .then((response) => {

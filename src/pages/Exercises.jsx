@@ -1,12 +1,9 @@
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
-import { Box, List, CircularProgress } from "@mui/material"
-import { Typography } from "@mui/joy"
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
-import { TreeItem } from "@mui/x-tree-view/TreeItem"
+import { Box, CircularProgress } from "@mui/material"
 import AuthContext from "../context"
 import { buildRequest } from "../helpers/block_helpers"
-import Item from "../components/Exercise"
+import ExercisesList from "../components/ExercisesList"
 
 const Exercises = () => {
   const { token, draftBlock, addBlockExercise, snackbar } =
@@ -75,27 +72,7 @@ const Exercises = () => {
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (
-        <nav aria-label="projects">
-          <List>
-            {list.map((exercise, idx) => {
-              return (
-                <SimpleTreeView id={exercise.id}>
-                  <TreeItem
-                    itemId={idx}
-                    label={<Typography>{exercise.titleRu}</Typography>}
-                  >
-                    <Item
-                      editable
-                      exercise={exercise}
-                      onAdd={saveBlockExercise}
-                      included={draftBlock?.exercisesIds.includes(exercise.id)}
-                    />
-                  </TreeItem>
-                </SimpleTreeView>
-              )
-            })}
-          </List>
-        </nav>
+        <ExercisesList {...{ list, onSave: saveBlockExercise, draftBlock }} />
       )}
     </Box>
   )

@@ -9,6 +9,7 @@ import Register from "./pages/Register"
 import Dashboard from "./pages/Dashboard"
 import CreateBlock from "./pages/CreateBlock"
 import BlocksList from "./pages/BlocksList"
+import Block from "./pages/Block"
 
 const routes = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const routes = createBrowserRouter([
         element: <BlocksList />,
       },
       {
+        path: "blocks/:id",
+        index: false,
+        element: <Block />,
+      },
+      {
         path: "/projects",
         element: <List />,
       },
@@ -59,6 +65,7 @@ const menuRoutes = [
   { route: "/", title: "Dashboard" },
   { route: "/exercises", title: "Exercises" },
   { route: "/exercises/create", title: "Create exercise" },
+  { route: "/blocks/", title: "Block" },
   { route: "/blocks", title: "Blocks" },
   { route: "/blocks/create", title: "Create block" },
   { route: "/projects", title: "Projects" },

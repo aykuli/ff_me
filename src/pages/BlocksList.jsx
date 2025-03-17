@@ -6,10 +6,9 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { SdCardAlert, TaskAlt } from "@mui/icons-material"
 import AuthContext from "../context"
 import BlockLabel from "../components/BlockLabel"
-import Exercise from "../components/Exercise"
 
 const BlocksList = () => {
-  const { token, draftBlock, snackbar } = useContext(AuthContext)
+  const { token, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [list, setList] = useState([])
@@ -89,15 +88,13 @@ const BlocksList = () => {
                   endIcon: { color: block.draft ? "warning" : "success" },
                 }}
               >
-                {exercises[block.id]?.map((exercise, index) => {
+                {exercises[block.id]?.map((exr, index) => {
                   return (
                     <>
-                      <Exercise
-                        editable={false}
-                        exercise={exercise}
-                        included={draftBlock?.exercisesIds.includes(
-                          exercise.id
-                        )}
+                      <TreeItem
+                        key={index}
+                        itemId={`${block.id}-${exr.id}-${index}`}
+                        label={`|-- ${exr.titleEn}`}
                       />
                       <Divider />
                     </>
