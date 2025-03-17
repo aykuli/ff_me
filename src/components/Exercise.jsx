@@ -57,8 +57,7 @@ function CustomLabel({
 }
 
 const Item = ({ exercise, onAdd, included, editable }) => {
-  const { token, draftBlock, addBlockExercise, snackbar } =
-    useContext(AuthContext)
+  const { token, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [value, setV] = useState(exercise)

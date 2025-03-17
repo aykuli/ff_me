@@ -10,15 +10,13 @@ import {
   Typography,
 } from "@mui/joy"
 import { Box } from "@mui/material"
-import {
-  SimCardAlert,
-} from "@mui/icons-material"
+import { SimCardAlert } from "@mui/icons-material"
 
 import AuthContext from "../context"
 import DraftBlock from "./DraftBlock"
 
 const DraftBlocksList = () => {
-  const { token, draftBlock, setDraftBlock, snackbar } = useContext(AuthContext)
+  const { token, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [draftBlocks, setBlocks] = useState([])

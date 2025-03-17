@@ -1,5 +1,4 @@
 import { Typography } from "@mui/joy"
-import { Divider } from "@mui/material"
 
 const BlockLabel = ({
   titleEn,

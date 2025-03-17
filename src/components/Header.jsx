@@ -13,7 +13,6 @@ import {
   Alert,
 } from "@mui/material"
 import { Logout, OtherHouses } from "@mui/icons-material"
-import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
 import AuthContext from "../context"

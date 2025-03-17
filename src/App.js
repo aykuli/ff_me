@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
-import { ThemeProvider, THEME_ID } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 
 import "./index.css"
 import routes from "./routes"
 import AuthContext from "./context"
-import { materialTheme } from "./theme"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
