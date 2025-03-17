@@ -13,7 +13,6 @@ import {
   Alert,
 } from "@mui/material"
 import { Logout, OtherHouses } from "@mui/icons-material"
-import { Typography } from "@mui/joy"
 
 import { menuRoutes } from "../routes"
 import AuthContext from "../context"
@@ -67,7 +66,7 @@ const Header = ({ children }) => {
           {msg}
         </Alert>
       </Snackbar>
-      <Container maxWidth="md" style={{ marginTop: "5vw" }}>
+      <Container maxWidth="md">
         <Box
           sx={{
             width: "calc(100%-",
@@ -91,6 +90,7 @@ const Header = ({ children }) => {
                 setAnchorEl(openMn ? null : e.currentTarget)
                 setOpenMn(!openMn)
               }}
+              size="large"
             >
               <OtherHouses />
             </IconButton>
@@ -107,9 +107,7 @@ const Header = ({ children }) => {
             </IconButton>
           </div>
           <Divider style={{ marginBottom: "3vh" }} />
-          <Typography level="h3" style={{ marginBottom: "2vh" }}>
-            {currTitle}
-          </Typography>
+          <h1>{currTitle}</h1>
 
           <Menu
             id="basic-menu"

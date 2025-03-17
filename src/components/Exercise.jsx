@@ -1,12 +1,19 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import axios from "axios"
-
 import { Box, CircularProgress, IconButton, Button } from "@mui/material"
-import { Stack, TextField, Snackbar, Alert } from "@mui/material"
-import { Typography } from "@mui/joy"
+import { Stack, TextField, Typography } from "@mui/material"
 import { Add, Delete, EditOutlined, PanoramaFishEye } from "@mui/icons-material"
+import AuthContext from "../context"
 
-function CustomLabel({ lang, title, isEdit, onEdit, onSave, ...props }) {
+function CustomLabel({
+  lang,
+  title,
+  isEdit,
+  onEdit,
+  onSave,
+  editable,
+  ...props
+}) {
   const [value, setValue] = useState(title)
   return (
     <Stack
@@ -28,40 +35,45 @@ function CustomLabel({ lang, title, isEdit, onEdit, onSave, ...props }) {
           }}
         />
       ) : (
-        <Typography level="body-md" sx={{ fontSize: "xl", mb: 0.5, mt: 2 }}>
+        <Typography variant="body" sx={{ fontSize: "xl", mb: 0.5, mt: 2 }}>
           {title}
         </Typography>
       )}
-      <IconButton
-        onClick={isEdit ? () => onSave(value) : onEdit}
-        aria-label="select item"
-        size="small"
-      >
-        {!isEdit ? (
-          <EditOutlined fontSize="inherit" color="primary" />
-        ) : (
-          <PanoramaFishEye fontSize="inherit" color="primary" />
-        )}
-      </IconButton>
+      {editable ? (
+        <IconButton
+          onClick={isEdit ? () => onSave(value) : onEdit}
+          aria-label="select item"
+          size="small"
+        >
+          {!isEdit ? (
+            <EditOutlined fontSize="inherit" color="primary" />
+          ) : (
+            <PanoramaFishEye fontSize="inherit" color="primary" />
+          )}
+        </IconButton>
+      ) : null}
     </Stack>
   )
 }
 
-const Item = ({ exercise, onAdd, included }) => {
+const Item = ({ exercise, onAdd, included, editable }) => {
+  const { token, snackbar } = useContext(AuthContext)
+  const { setOpen, setMsg, setType } = snackbar
+
   const [value, setV] = useState(exercise)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
-  const [openSnackbar, setOpenSb] = useState(false)
-  const [sbMsg, setSbMsg] = useState("")
-  const [sbType, setSbType] = useState("success")
 
   const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
 
   const src = `${process.env.REACT_APP_API_URL}/exercises`
 
   const save = () => {
-    setOpenSb(true)
+    if (!token) {
+      return
+    }
+
     setIsLoading(true)
     axios({
       method: "POST",
@@ -76,14 +88,17 @@ const Item = ({ exercise, onAdd, included }) => {
       },
     })
       .then((response) => {
-        setSbMsg("Successfully saved")
-        setSbType("success")
+        setMsg("Successfully saved")
+        setType("success")
       })
       .catch((e) => {
-        setSbMsg("Exercise save error: " + e)
-        setSbType("error")
+        setType("error")
+        setMsg("Server exercises fetch error")
       })
-      .finally(() => setIsLoading(false))
+      .finally(() => {
+        setOpen(true)
+        setIsLoading(false)
+      })
   }
 
   const handleEdit = (lang) => {
@@ -107,11 +122,6 @@ const Item = ({ exercise, onAdd, included }) => {
     save()
   }
 
-  const handleCloseSb = () => {
-    setOpenSb(false)
-    setSbMsg("")
-  }
-
   const handleDel = () => {
     axios({
       method: "DELETE",
@@ -125,12 +135,12 @@ const Item = ({ exercise, onAdd, included }) => {
       },
     })
       .then((response) => {
-        setSbMsg("Successfully deleted")
-        setSbType("success")
+        setMsg("Successfully deleted")
+        setType("success")
       })
       .catch((e) => {
-        setSbMsg("Exercise save error: " + e)
-        setSbType("error")
+        setMsg("Exercise save error: " + e)
+        setType("error")
       })
       .finally(() => {
         setIsLoading(false)
@@ -145,34 +155,22 @@ const Item = ({ exercise, onAdd, included }) => {
         bgcolor: "background.paper",
       }}
     >
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSb}
-      >
-        <Alert
-          onClose={handleCloseSb}
-          severity={sbType}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
-          {sbMsg}
-        </Alert>
-      </Snackbar>
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (
         <div>
           <CustomLabel
             lang="en"
-            title={value.titleEn}
             isEdit={isEditEn}
+            editable={editable}
+            title={value.titleEn}
             onEdit={() => handleEdit("en")}
             onSave={(v) => handleSave("en", v)}
           />
           <CustomLabel
             lang="ru"
             isEdit={isEditRu}
+            editable={editable}
             title={value.titleRu}
             onEdit={() => handleEdit("ru")}
             onSave={(v) => handleSave("ru", v)}
@@ -182,28 +180,30 @@ const Item = ({ exercise, onAdd, included }) => {
               <source controls src={url} type="video/mp4" />
             </video>
           </Box>
-          <div
-            style={{
-              marginTop: "10px",
-              marginBottom: "10px",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              variant="contained"
-              edge="end"
-              size="small"
-              onClick={() => onAdd(value.id)}
-              color={included ? "secondary" : "primary"}
+          {editable ? (
+            <div
+              style={{
+                marginTop: "10px",
+                marginBottom: "10px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              <Add />
-            </Button>
+              <Button
+                variant="contained"
+                edge="end"
+                size="small"
+                onClick={() => onAdd(value.id)}
+                color={included ? "secondary" : "primary"}
+              >
+                <Add />
+              </Button>
 
-            <IconButton edge="end" size="small" onClick={handleDel}>
-              <Delete />
-            </IconButton>
-          </div>
+              <IconButton edge="end" size="small" onClick={handleDel}>
+                <Delete />
+              </IconButton>
+            </div>
+          ) : null}
         </div>
       )}
     </Box>
