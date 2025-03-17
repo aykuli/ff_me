@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
-import { Divider } from "@mui/material"
+import { Divider, CircularProgress } from "@mui/material"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { SdCardAlert, TaskAlt } from "@mui/icons-material"
@@ -67,38 +67,47 @@ const BlocksList = () => {
 
   return (
     <>
-      {list.map((block) => {
-        return (
-          <SimpleTreeView key={block.id}>
-            <TreeItem
-              itemId={`block-${block.id}`}
-              label={
-                <BlockLabel {...block} onClick={() => handleClick(block.id)} />
-              }
-              color="warning"
-              slots={{
-                endIcon: block.draft ? SdCardAlert : TaskAlt,
-              }}
-              slotProps={{
-                endIcon: { color: block.draft ? "warning" : "success" },
-              }}
-            >
-              {exercises[block.id]?.map((exercise, index) => {
-                return (
-                  <>
-                    <Exercise
-                      editable={false}
-                      exercise={exercise}
-                      included={draftBlock?.exercisesIds.includes(exercise.id)}
-                    />
-                    <Divider />
-                  </>
-                )
-              })}
-            </TreeItem>
-          </SimpleTreeView>
-        )
-      })}
+      {isLoading ? (
+        <CircularProgress size="3rem" />
+      ) : (
+        list?.map((block) => {
+          return (
+            <SimpleTreeView key={block.id}>
+              <TreeItem
+                itemId={`block-${block.id}`}
+                label={
+                  <BlockLabel
+                    {...block}
+                    onClick={() => handleClick(block.id)}
+                  />
+                }
+                color="warning"
+                slots={{
+                  endIcon: block.draft ? SdCardAlert : TaskAlt,
+                }}
+                slotProps={{
+                  endIcon: { color: block.draft ? "warning" : "success" },
+                }}
+              >
+                {exercises[block.id]?.map((exercise, index) => {
+                  return (
+                    <>
+                      <Exercise
+                        editable={false}
+                        exercise={exercise}
+                        included={draftBlock?.exercisesIds.includes(
+                          exercise.id
+                        )}
+                      />
+                      <Divider />
+                    </>
+                  )
+                })}
+              </TreeItem>
+            </SimpleTreeView>
+          )
+        })
+      )}
     </>
   )
 }
