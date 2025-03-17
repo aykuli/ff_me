@@ -1,25 +1,20 @@
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
-
-import { Box, List, CircularProgress } from "@mui/material"
-import { Typography } from "@mui/joy"
+import { Divider } from "@mui/material"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { SdCardAlert, TaskAlt } from "@mui/icons-material"
-import { useMediaQuery } from "@mui/material"
-
 import AuthContext from "../context"
 import BlockLabel from "../components/BlockLabel"
+import Exercise from "../components/Exercise"
 
 const BlocksList = () => {
-  const { token, draftBlock, addBlockExercise, snackbar } =
-    useContext(AuthContext)
+  const { token, draftBlock, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [list, setList] = useState([])
   const [exercises, setExercises] = useState(new Map())
   const [isLoading, setIsLoading] = useState(false)
-  const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
 
   useEffect(() => {
     if (!token) {
@@ -88,13 +83,16 @@ const BlocksList = () => {
                 endIcon: { color: block.draft ? "warning" : "success" },
               }}
             >
-              {exercises[block.id]?.map((exr, index) => {
+              {exercises[block.id]?.map((exercise, index) => {
                 return (
-                  <TreeItem
-                    key={exr.id}
-                    itemId={`${block.id}-${exr.id}-${index}`}
-                    label={`|-- ${exr.titleEn}`}
-                  />
+                  <>
+                    <Exercise
+                      editable={false}
+                      exercise={exercise}
+                      included={draftBlock?.exercisesIds.includes(exercise.id)}
+                    />
+                    <Divider />
+                  </>
                 )
               })}
             </TreeItem>

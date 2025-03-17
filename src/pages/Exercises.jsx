@@ -1,24 +1,19 @@
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
-
 import { Box, List, CircularProgress } from "@mui/material"
 import { Typography } from "@mui/joy"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
-
-import Item from "./Item"
-
-import AuthContext from "../../context"
-import { buildRequest } from "../../helpers/block_helpers"
+import AuthContext from "../context"
+import { buildRequest } from "../helpers/block_helpers"
+import Item from "../components/Exercise"
 
 const Exercises = () => {
   const { token, draftBlock, addBlockExercise, snackbar } =
     useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
-
   const [list, setList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [openIds, setOpenIds] = useState(Array(list.length).fill(false))
 
   useEffect(() => {
     if (!token) {
@@ -75,13 +70,6 @@ const Exercises = () => {
       })
   }
 
-  const handleOpenItem = (idx) => {
-    setOpenIds((prev) => {
-      prev[idx] = !prev[idx]
-      return prev
-    })
-  }
-
   return (
     <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
       {isLoading ? (
@@ -91,16 +79,13 @@ const Exercises = () => {
           <List>
             {list.map((exercise, idx) => {
               return (
-                <SimpleTreeView
-                  id={exercise.id}
-                  onClick={(e) => handleOpenItem(idx)}
-                >
+                <SimpleTreeView id={exercise.id}>
                   <TreeItem
                     itemId={idx}
                     label={<Typography>{exercise.titleRu}</Typography>}
                   >
                     <Item
-                      open={openIds.includes(idx)}
+                      editable
                       exercise={exercise}
                       onAdd={saveBlockExercise}
                       included={draftBlock?.exercisesIds.includes(exercise.id)}
