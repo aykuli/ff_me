@@ -62,7 +62,7 @@ const BlockLabelSquares = ({
           style={{
             backgroundColor: "rgb(213, 220, 110)",
             padding: "5px",
-            width: 60,
+            width: 70,
             textAlign: "center",
           }}
         >
