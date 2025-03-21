@@ -11,6 +11,7 @@ import {
   Slider,
   Typography,
 } from "@mui/material"
+import { Typography as JoyTypography } from "@mui/joy"
 
 import AuthContext from "../../context"
 import { full, initBody } from "./helpers"
@@ -88,6 +89,9 @@ const CreateBlock = () => {
 
   return (
     <>
+      <JoyTypography level="h1" sx={{ mb: 2 }}>
+        Create block
+      </JoyTypography>
       <Box
         sx={{ width: "100%" }}
         component="form"

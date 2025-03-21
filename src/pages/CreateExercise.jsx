@@ -10,8 +10,9 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { CloudUpload } from "@mui/icons-material"
+import { Typography } from "@mui/joy"
 
-import AuthContext from "../../context"
+import AuthContext from "../context"
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -94,59 +95,67 @@ const CreateExercise = () => {
   }
 
   return (
-    <Box sx={{ width: "100%" }} component="form" noValidate autoComplete="off">
-      <Grid direction="column" container rowSpacing={2}>
-        <Grid size={"100%"}>
-          <TextField
-            fullWidth
-            id="title_en"
-            label="title english"
-            variant="outlined"
-            onChange={(e) => handleTxtInputValue("titleEn", e)}
-          />
-        </Grid>
-        <Grid size={"100%"}>
-          <TextField
-            fullWidth
-            id="title_ru"
-            label="title russian"
-            variant="outlined"
-            onChange={(e) => handleTxtInputValue("titleRu", e)}
-          />
-        </Grid>
-        <Grid size={"100%"}>
-          <Button
-            fullWidth
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUpload />}
-          >
-            Upload file
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-              multiple
+    <>
+      <Typography level="h1">Create exercise</Typography>
+      <Box
+        sx={{ width: "100%", mt: 2 }}
+        component="form"
+        noValidate
+        autoComplete="off"
+      >
+        <Grid direction="column" container rowSpacing={2}>
+          <Grid size={"100%"}>
+            <TextField
+              fullWidth
+              id="title_en"
+              label="title english"
+              variant="outlined"
+              onChange={(e) => handleTxtInputValue("titleEn", e)}
             />
-          </Button>
+          </Grid>
+          <Grid size={"100%"}>
+            <TextField
+              fullWidth
+              id="title_ru"
+              label="title russian"
+              variant="outlined"
+              onChange={(e) => handleTxtInputValue("titleRu", e)}
+            />
+          </Grid>
+          <Grid size={"100%"}>
+            <Button
+              fullWidth
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUpload />}
+            >
+              Upload file
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                multiple
+              />
+            </Button>
+          </Grid>
+          <Grid size={"100%"} style={{ marginTop: "6vh" }}>
+            <Button
+              component="button"
+              variant="contained"
+              tabIndex={-1}
+              fullWidth
+              color="success"
+              onClick={handleSave}
+              disabled={saveBtnDisabled}
+            >
+              {isUploading ? <CircularProgress size="small" /> : null}
+              Save
+            </Button>
+          </Grid>
         </Grid>
-        <Grid size={"100%"} style={{ marginTop: "6vh" }}>
-          <Button
-            component="button"
-            variant="contained"
-            tabIndex={-1}
-            fullWidth
-            color="success"
-            onClick={handleSave}
-            disabled={saveBtnDisabled}
-          >
-            {isUploading ? <CircularProgress size="small" /> : null}
-            Save
-          </Button>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   )
 }
 

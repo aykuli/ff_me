@@ -25,17 +25,11 @@ const Header = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [openMn, setOpenMn] = useState(Boolean(anchorEl))
   const [currRoute, setCurrRoute] = useState("")
-  const [currTitle, setCurrTitle] = useState("")
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
     setCurrRoute(location.pathname)
-
-    const filtered = menuRoutes.find(({ route }) => route === location.pathname)
-    if (filtered?.title) {
-      setCurrTitle(filtered.title)
-    }
   }, [location])
 
   const logout = () => {
@@ -107,7 +101,6 @@ const Header = ({ children }) => {
             </IconButton>
           </div>
           <Divider style={{ marginBottom: "3vh" }} />
-          <h1>{currTitle}</h1>
 
           <Menu
             id="basic-menu"

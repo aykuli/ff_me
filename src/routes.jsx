@@ -65,7 +65,6 @@ const menuRoutes = [
   { route: "/", title: "Dashboard" },
   { route: "/exercises", title: "Exercises" },
   { route: "/exercises/create", title: "Create exercise" },
-  { route: "/blocks/", title: "Block" },
   { route: "/blocks", title: "Blocks" },
   { route: "/blocks/create", title: "Create block" },
   { route: "/projects", title: "Projects" },

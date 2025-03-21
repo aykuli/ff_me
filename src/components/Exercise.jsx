@@ -1,6 +1,12 @@
 import { useState, useContext } from "react"
 import axios from "axios"
-import { Box, CircularProgress, IconButton, Button } from "@mui/material"
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Button,
+  Divider,
+} from "@mui/material"
 import { Add, Delete } from "@mui/icons-material"
 import AuthContext from "../context"
 import CustomLabel from "../components/CustimTitleLabel"
@@ -14,7 +20,7 @@ const Item = ({ exercise, onAdd, included, editable }) => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-  const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
+  const url = `${process.env.REACT_APP_CDN_URL}${exercise.filename}`
 
   const src = `${process.env.REACT_APP_API_URL}/exercises`
 
@@ -103,12 +109,13 @@ const Item = ({ exercise, onAdd, included, editable }) => {
       sx={{
         width: "100%",
         bgcolor: "background.paper",
+        pb: 4,
       }}
     >
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (
-        <div>
+        <div style={{ paddingBottom: 10 }}>
           <CustomLabel
             lang="en"
             isEdit={isEditEn}
@@ -156,6 +163,7 @@ const Item = ({ exercise, onAdd, included, editable }) => {
           ) : null}
         </div>
       )}
+      <Divider />
     </Box>
   )
 }

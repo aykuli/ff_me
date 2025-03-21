@@ -1,6 +1,6 @@
 import { NavLink } from "react-router"
 
-import { useTheme } from "@mui/material"
+import { IconButton, useTheme } from "@mui/material"
 import { ListItemContent, Avatar, Typography } from "@mui/joy"
 import { Divider } from "@mui/material"
 import {
@@ -8,9 +8,10 @@ import {
   Timer,
   RadioButtonChecked,
   RadioButtonUnchecked,
+  Flaky,
 } from "@mui/icons-material"
 
-const DraftBlock = ({ block, last }) => {
+const DraftBlock = ({ block, last, markReady }) => {
   const {
     id,
     titleEn,
@@ -47,6 +48,11 @@ const DraftBlock = ({ block, last }) => {
             <Typography level="body-sm">{titleRu}</Typography>
           </NavLink>
         </ListItemContent>
+        {totalExercises === exercisesIds.length && (
+          <IconButton color="success" onClick={() => markReady(id)}>
+            <Flaky />
+          </IconButton>
+        )}
       </div>
       <div style={{ marginLeft: 39 }}>
         <Div>
