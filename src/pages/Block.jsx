@@ -22,6 +22,9 @@ const Block = () => {
   const [isEditRu, setIsEditRu] = useState(false)
 
   useEffect(() => {
+    if (!token) {
+      return
+    }
     setIsLoading(true)
     axios({
       method: "get",

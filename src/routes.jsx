@@ -39,14 +39,14 @@ const routes = createBrowserRouter([
         element: <CreateBlock />,
       },
       {
-        path: "blocks",
-        index: false,
-        element: <BlocksList />,
-      },
-      {
         path: "blocks/:id",
         index: false,
         element: <Block />,
+      },
+      {
+        path: "blocks",
+        index: false,
+        element: <BlocksList />,
       },
       {
         path: "/projects",

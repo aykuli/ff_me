@@ -10,7 +10,7 @@ const ExercisesList = ({ list, onSave, draftBlock }) => {
       {list.length ? (
         list.map((exercise, idx) => {
           return (
-            <SimpleTreeView id={exercise.id}>
+            <SimpleTreeView key={`${exercise.id}-${idx}`} id={exercise.id}>
               <TreeItem
                 itemId={idx}
                 label={<Typography>{exercise.titleRu}</Typography>}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useLayoutEffect } from "react"
 import { RouterProvider } from "react-router-dom"
 import CssBaseline from "@mui/material/CssBaseline"
 
@@ -20,7 +20,7 @@ const App = () => {
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stToken = localStorage.getItem(process.env.REACT_APP_TOKEN_LS_NAME)
     if (stToken) {
       setToken(stToken)
