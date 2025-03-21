@@ -8,6 +8,7 @@ import CustomLabel from "../components/CustimTitleLabel"
 import AuthContext from "../context"
 import ExercisesList from "../components/ExercisesList"
 import Squares from "../components/BlockLabelSquares"
+import ListVideo from "../components/ExercisesListVideo"
 
 const Block = () => {
   let { id } = useParams()
@@ -151,9 +152,8 @@ const Block = () => {
 
   return (
     <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-      {isLoading ? (
-        <CircularProgress size="3rem" />
-      ) : (
+      {isLoading && <CircularProgress size="3rem" />}
+      {block && (
         <div>
           <div style={{ display: "flex", justifyContent: "end" }}>
             <IconButton size="small" onClick={handleDel}>
@@ -177,6 +177,12 @@ const Block = () => {
             onSave={(v) => handleSave("ru", v)}
           />
           <Squares {...block} />
+          <ListVideo
+            onTime={block.onTime}
+            relaxTime={block.relaxTime}
+            totalDuration={block.totalDuration}
+            exercises={exercises}
+          />
           <div>
             <Typography variant="h5">Exercises</Typography>
             <ExercisesList list={exercises} />
