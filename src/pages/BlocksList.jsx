@@ -1,9 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
+
 import { Divider, CircularProgress } from "@mui/material"
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView"
 import { TreeItem } from "@mui/x-tree-view/TreeItem"
 import { SdCardAlert, TaskAlt } from "@mui/icons-material"
+import { Typography } from "@mui/joy"
+
 import AuthContext from "../context"
 import BlockLabel from "../components/BlockLabel"
 
@@ -66,6 +69,9 @@ const BlocksList = () => {
 
   return (
     <>
+      <Typography level="h1" sx={{ mb: 2 }}>
+        Blocks list
+      </Typography>
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (

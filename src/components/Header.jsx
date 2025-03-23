@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 
 import {
-  Box,
   IconButton,
   Container,
   Menu,
@@ -19,23 +18,18 @@ import AuthContext from "../context"
 import DraftBlockAlert from "./DraftBlockAlert"
 
 const Header = ({ children }) => {
-  const { token, setToken, draftBlock, snackbar } = useContext(AuthContext)
+  const { token, setToken, draftBlock, snackbar, deleteBlockExercise } =
+    useContext(AuthContext)
   const { open, setOpen, msg, setMsg, type } = snackbar
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [openMn, setOpenMn] = useState(Boolean(anchorEl))
   const [currRoute, setCurrRoute] = useState("")
-  const [currTitle, setCurrTitle] = useState("")
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
     setCurrRoute(location.pathname)
-
-    const filtered = menuRoutes.find(({ route }) => route === location.pathname)
-    if (filtered?.title) {
-      setCurrTitle(filtered.title)
-    }
   }, [location])
 
   const logout = () => {
@@ -67,68 +61,64 @@ const Header = ({ children }) => {
         </Alert>
       </Snackbar>
       <Container maxWidth="md">
-        <Box
-          sx={{
-            width: "calc(100%-",
-            maxWidth: 640,
-            bgcolor: "background.paper",
-            boxShadow: 1,
-            borderRadius: 2,
-            p: 2,
-          }}
-        >
-          {draftBlock && <DraftBlockAlert block={draftBlock} />}
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <IconButton
-              edge="end"
-              aria-label="more"
-              id="long-button"
-              aria-controls={openMn ? "long-menu" : undefined}
-              aria-expanded={openMn ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={(e) => {
-                setAnchorEl(openMn ? null : e.currentTarget)
-                setOpenMn(!openMn)
-              }}
-              size="large"
-            >
-              <OtherHouses />
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="more"
-              id="long-button"
-              aria-controls={openMn ? "long-menu" : undefined}
-              aria-expanded={openMn ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={() => logout()}
-            >
-              <Logout />
-            </IconButton>
-          </div>
-          <Divider style={{ marginBottom: "3vh" }} />
-          <h1>{currTitle}</h1>
-
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={openMn}
-            onClose={() => setOpenMn(false)}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={openMn ? "long-menu" : undefined}
+            aria-expanded={openMn ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={(e) => {
+              setAnchorEl(openMn ? null : e.currentTarget)
+              setOpenMn(!openMn)
+            }}
+            size="large"
           >
-            {menuRoutes.map(({ route, title }) => {
-              return (
-                <MenuItem
-                  disabled={route === currRoute}
-                  key={route}
-                  onClick={() => navigate(route)}
-                >
-                  {title}
-                </MenuItem>
-              )
-            })}
-          </Menu>
-          {children}
-        </Box>
+            <OtherHouses />
+          </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={openMn ? "long-menu" : undefined}
+            aria-expanded={openMn ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={() => logout()}
+          >
+            <Logout />
+          </IconButton>
+        </div>
+        <Divider style={{ marginBottom: "3vh" }} />
+        {draftBlock && (
+          <>
+            <DraftBlockAlert
+              block={draftBlock}
+              deleteBlockExercise={deleteBlockExercise}
+            />
+            <Divider style={{ marginBottom: "3vh" }} />
+          </>
+        )}
+
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openMn}
+          onClose={() => setOpenMn(false)}
+        >
+          {menuRoutes.map(({ route, title }) => {
+            return (
+              <MenuItem
+                disabled={route === currRoute}
+                key={route}
+                onClick={() => navigate(route)}
+              >
+                {title}
+              </MenuItem>
+            )
+          })}
+        </Menu>
+        {children}
       </Container>
     </>
   )

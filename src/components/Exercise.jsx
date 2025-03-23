@@ -1,11 +1,17 @@
 import { useState, useContext } from "react"
 import axios from "axios"
-import { Box, CircularProgress, IconButton, Button } from "@mui/material"
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Button,
+  Divider,
+} from "@mui/material"
 import { Add, Delete } from "@mui/icons-material"
 import AuthContext from "../context"
 import CustomLabel from "../components/CustimTitleLabel"
 
-const Item = ({ exercise, onAdd, included, editable }) => {
+const Item = ({ exercise, onAdd, included }) => {
   const { token, snackbar } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
@@ -14,7 +20,7 @@ const Item = ({ exercise, onAdd, included, editable }) => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-  const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
+  const url = `${process.env.REACT_APP_CDN_URL}${exercise.filename}`
 
   const src = `${process.env.REACT_APP_API_URL}/exercises`
 
@@ -103,16 +109,16 @@ const Item = ({ exercise, onAdd, included, editable }) => {
       sx={{
         width: "100%",
         bgcolor: "background.paper",
+        pb: 4,
       }}
     >
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (
-        <div>
+        <div style={{ paddingBottom: 10 }}>
           <CustomLabel
             lang="en"
             isEdit={isEditEn}
-            editable={editable}
             title={value.titleEn}
             onEdit={() => handleEdit("en")}
             onSave={(v) => handleSave("en", v)}
@@ -120,7 +126,6 @@ const Item = ({ exercise, onAdd, included, editable }) => {
           <CustomLabel
             lang="ru"
             isEdit={isEditRu}
-            editable={editable}
             title={value.titleRu}
             onEdit={() => handleEdit("ru")}
             onSave={(v) => handleSave("ru", v)}
@@ -130,32 +135,31 @@ const Item = ({ exercise, onAdd, included, editable }) => {
               <source controls src={url} type="video/mp4" />
             </video>
           </Box>
-          {editable ? (
-            <div
-              style={{
-                marginTop: "10px",
-                marginBottom: "10px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
+          <div
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              variant="contained"
+              edge="end"
+              size="small"
+              onClick={() => onAdd(value)}
+              color={included ? "secondary" : "primary"}
             >
-              <Button
-                variant="contained"
-                edge="end"
-                size="small"
-                onClick={() => onAdd(value.id)}
-                color={included ? "secondary" : "primary"}
-              >
-                <Add />
-              </Button>
+              <Add />
+            </Button>
 
-              <IconButton edge="end" size="small" onClick={handleDel}>
-                <Delete />
-              </IconButton>
-            </div>
-          ) : null}
+            <IconButton edge="end" size="small" onClick={handleDel}>
+              <Delete />
+            </IconButton>
+          </div>
         </div>
       )}
+      <Divider />
     </Box>
   )
 }

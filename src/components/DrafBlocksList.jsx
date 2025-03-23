@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from "react"
+import { useEffect, useContext, useState, useCallback } from "react"
 import axios from "axios"
 
 import {
@@ -16,20 +16,16 @@ import AuthContext from "../context"
 import DraftBlock from "./DraftBlock"
 
 const DraftBlocksList = () => {
-  const { token, snackbar } = useContext(AuthContext)
+  const { token, snackbar, setDraftBlock } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [draftBlocks, setBlocks] = useState([])
 
-  useEffect(() => {
-    if (!token) {
-      return
-    }
-
+  const fetchBlocks = useCallback(() => {
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API_URL}/blocks/list`,
-      data: { draft: true },
+      data: { blockType: "draft" },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -44,7 +40,43 @@ const DraftBlocksList = () => {
         setType("error")
         setMsg("Server exercises fetch error")
       })
-  }, [token, setType, setMsg, setOpen])
+  }, [setMsg, setOpen, setType, token])
+
+  useEffect(() => {
+    if (!token) {
+      return
+    }
+
+    fetchBlocks()
+  }, [fetchBlocks, token])
+
+  const markReady = (id) => {
+    if (!token) {
+      return
+    }
+
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/blocks/${id}`,
+      data: { draft: false },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        setBlocks(response.data)
+      })
+      .catch((e) => {
+        setOpen(true)
+        setType("error")
+        setMsg("Server exercises fetch error")
+      })
+      .finally(() => {
+        fetchBlocks()
+      })
+  }
 
   return (
     <>
@@ -66,7 +98,10 @@ const DraftBlocksList = () => {
                 {draftBlocks?.map((block, index) => {
                   return (
                     <DraftBlock
+                      key={`${block.title}-${index}`}
                       {...{ block, last: index + 1 === draftBlocks?.length }}
+                      markReady={markReady}
+                      onClick={() => setDraftBlock(block)}
                     />
                   )
                 })}

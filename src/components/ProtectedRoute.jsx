@@ -1,25 +1,34 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom"
-import { useContext } from "react"
+import { Navigate, Outlet } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
 
 import AuthContext from "../context"
 
 import Header from "./Header"
+import { CircularProgress } from "@mui/material"
 
 const ProtectedRoute = () => {
-  const location = useLocation()
   const { token } = useContext(AuthContext)
+  const [isLoading, setTIsLoading] = useState(true)
 
-  if (token !== null && location.pathname === "/login") {
-    return <Navigate to="/" />
-  }
+  useEffect(() => {
+    if (!token) {
+      return
+    }
 
-  return token === null ? (
-    <Navigate to="/login" />
-  ) : (
-    <Header>
-      <Outlet />
-    </Header>
+    setTIsLoading(false)
+  }, [token])
+
+  return (
+    <>
+      {isLoading && <CircularProgress size="large" />}
+      {!isLoading && token === null ? (
+        <Navigate to="/login" />
+      ) : (
+        <Header>
+          <Outlet />
+        </Header>
+      )}
+    </>
   )
 }
-
 export default ProtectedRoute

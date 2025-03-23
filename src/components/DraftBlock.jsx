@@ -1,16 +1,15 @@
-import { NavLink } from "react-router"
-
-import { useTheme } from "@mui/material"
-import { ListItemContent, Avatar, Typography } from "@mui/joy"
+import { IconButton } from "@mui/material"
+import { ListItemButton, Avatar, Typography } from "@mui/joy"
 import { Divider } from "@mui/material"
 import {
   AccessibilityNewRounded,
   Timer,
   RadioButtonChecked,
   RadioButtonUnchecked,
+  Flaky,
 } from "@mui/icons-material"
 
-const DraftBlock = ({ block, last }) => {
+const DraftBlock = ({ block, last, markReady, onClick }) => {
   const {
     id,
     titleEn,
@@ -22,7 +21,6 @@ const DraftBlock = ({ block, last }) => {
     createdAt,
   } = block
   const totalExercises = (totalDuration * 60) / (onTime + relaxTime)
-  const theme = useTheme()
 
   return (
     <div key={id} style={{ marginTop: 10 }}>
@@ -31,22 +29,15 @@ const DraftBlock = ({ block, last }) => {
           <AccessibilityNewRounded />
         </Avatar>
 
-        <ListItemContent>
-          <NavLink
-            to={`blocks/${id}`}
-            end
-            style={{ color: theme.palette.primary.dark }}
-          >
-            <Typography level="title-md">{titleEn}</Typography>
-          </NavLink>
-          <NavLink
-            to={`blocks/${id}`}
-            end
-            style={{ color: theme.palette.primary.dark }}
-          >
-            <Typography level="body-sm">{titleRu}</Typography>
-          </NavLink>
-        </ListItemContent>
+        <ListItemButton onClick={onClick} sx={{ display: "block" }}>
+          <Typography level="title-md">{titleEn}</Typography>
+          <Typography level="body-sm">{titleRu}</Typography>
+        </ListItemButton>
+        {totalExercises === exercisesIds.length && (
+          <IconButton color="success" onClick={() => markReady(id)}>
+            <Flaky />
+          </IconButton>
+        )}
       </div>
       <div style={{ marginLeft: 39 }}>
         <Div>
