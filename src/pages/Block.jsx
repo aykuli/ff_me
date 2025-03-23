@@ -18,6 +18,13 @@ import ExercisesList from "../components/ExercisesList"
 import Squares from "../components/BlockLabelSquares"
 import ListVideo from "../components/ExercisesListVideo"
 
+const relaxExercise = {
+  relax: true,
+  filename: "files/relax.mp4",
+  titleEn: "relax",
+  titleRu: "отдых",
+}
+
 const Block = () => {
   let { id } = useParams()
   const { token, snackbar, setDraftBlock } = useContext(AuthContext)
@@ -30,10 +37,64 @@ const Block = () => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+  const [currExercise, setCurrExercise] = useState(null)
+  const [nextExercise, setNextExercise] = useState(null)
+
+  const [currIdx, setCurrIdx] = useState(0)
+  const [count, setCount] = useState(10)
+
+  async function startExerciseRoutine() {
+    setCurrExercise(relaxExercise)
+    setNextExercise(exercises[0])
+    let c = 0
+    while (c < 10) {
+      await sleep(1000)
+      setCount((prev) => prev - 1)
+      c++
+    }
+
+    for (let i = 0; i < exercises.length; i++) {
+      setCurrIdx(i)
+      setCurrExercise(exercises[i])
+      setCount(block?.onTime)
+      setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
+
+      c = 0
+      while (c < block?.onTime) {
+        await sleep(1000)
+        setCount((prev) => prev - 1)
+        c++
+      }
+
+      if (i + 1 > exercises.length) {
+        // finish
+        c = 0
+        while (c < 10) {
+          await sleep(1000)
+          setCount((prev) => prev - 1)
+          c++
+        }
+      } else {
+        setCurrExercise(relaxExercise)
+        setCount(block?.relaxTime)
+
+        c = 0
+        while (c < block?.relaxTime) {
+          await sleep(1000)
+          setCount((prev) => prev - 1)
+          c++
+        }
+      }
+    }
+  }
+
   useEffect(() => {
     if (!token) {
       return
     }
+
     setIsLoading(true)
     axios({
       method: "get",
@@ -200,17 +261,20 @@ const Block = () => {
                 <Squares {...block} />
                 {block.draft ? null : (
                   <ListVideo
-                    onTime={block.onTime}
-                    relaxTime={block.relaxTime}
-                    totalDuration={block.totalDuration}
-                    exercises={exercises}
+                    {...{
+                      currExercise,
+                      currIdx,
+                      nextExercise,
+                      count,
+                      onPlay: startExerciseRoutine,
+                    }}
                   />
                 )}
                 <div>
                   <Typography variant="h5">Exercises</Typography>
                 </div>
 
-                {(block.totalDuration * 60) / (block.onTime + block.relaxTime) <
+                {(block.totalDuration * 60) / (block.onTime + block.relaxTime) >
                   exercises.length && (
                   <div>
                     <p>Please, add some exercise.</p>
@@ -220,7 +284,7 @@ const Block = () => {
                   </div>
                 )}
 
-                {exercises.length && (
+                {exercises.length !== 0 && (
                   <ExercisesList list={exercises} countable />
                 )}
               </div>

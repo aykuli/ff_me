@@ -1,81 +1,11 @@
-import { Box } from "@mui/material"
+import { Box, Button } from "@mui/material"
 import { Typography } from "@mui/joy"
-import { useLayoutEffect, useState } from "react"
 import Video from "./Video"
 
-const relaxExercise = {
-  relax: true,
-  filename: "files/relax.mp4",
-  titleEn: "relax",
-  titleRu: "отдых",
-}
-
-const ListVideo = ({ onTime, relaxTime, totalDuration, exercises }) => {
-  let a = 0
-  const [currExercise, setCurrExercise] = useState(null)
-  const [nextExercise, setNextExercise] = useState(null)
-
-  const [currIdx, setCurrIdx] = useState(0)
-  const [count, setCount] = useState(10)
-
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-  useLayoutEffect(() => {
-    a++
-    if (a > 1) {
-      return
-    }
-
-    async function startExerciseRoutine() {
-      setCurrExercise(relaxExercise)
-      setNextExercise(exercises[0])
-      let c = 0
-      while (c < 10) {
-        await sleep(1000)
-        setCount((prev) => prev - 1)
-        c++
-      }
-
-      for (let i = 0; i < exercises.length; i++) {
-        setCurrIdx(i)
-        setCurrExercise(exercises[i])
-        setCount(onTime)
-        setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
-
-        let c = 0
-        while (c < onTime) {
-          await sleep(1000)
-          setCount((prev) => prev - 1)
-          c++
-        }
-
-        if (i + 1 < exercises.length) {
-          // finish
-          c = 0
-          while (c < 10) {
-            await sleep(1000)
-            setCount((prev) => prev - 1)
-            c++
-          }
-        } else {
-          setCurrExercise(relaxExercise)
-          setCount(relaxTime)
-
-          c = 0
-          while (c < relaxTime) {
-            await sleep(1000)
-            setCount((prev) => prev - 1)
-            c++
-          }
-        }
-      }
-    }
-
-    startExerciseRoutine()
-  }, [exercises, onTime, relaxTime, a])
-
+const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
   return (
     <Box sx={{ mt: 3 }}>
+      <Button variant="contained" onClick={onPlay}>Play</Button>
       <Typography level="h2">Current exercise</Typography>
       {currExercise && (
         <div style={{ position: "relative" }}>
