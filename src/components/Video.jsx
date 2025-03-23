@@ -1,7 +1,7 @@
 import React, { useRef } from "react"
 import ReactPlayer from "react-player"
 
-const VideoPlayer = ({ urls, onStart }) => {
+const VideoPlayer = ({ urls }) => {
   const playerRef = useRef(null)
 
   return (
@@ -14,7 +14,6 @@ const VideoPlayer = ({ urls, onStart }) => {
       height="100%"
       loop
       volume={0}
-      onStart={onStart}
     />
   )
 }

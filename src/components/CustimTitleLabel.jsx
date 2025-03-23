@@ -3,15 +3,7 @@ import { IconButton } from "@mui/material"
 import { Stack, TextField, Typography } from "@mui/material"
 import { EditOutlined, PanoramaFishEye } from "@mui/icons-material"
 
-function CustomLabel({
-  lang,
-  title,
-  isEdit,
-  onEdit,
-  onSave,
-  editable,
-  ...props
-}) {
+function CustomLabel({ lang, title, isEdit, onEdit, onSave, ...props }) {
   const [value, setValue] = useState(title)
   return (
     <Stack
@@ -35,19 +27,17 @@ function CustomLabel({
       ) : (
         <Typography variant="body">{title}</Typography>
       )}
-      {editable ? (
-        <IconButton
-          onClick={isEdit ? () => onSave(value) : onEdit}
-          aria-label="select item"
-          size="small"
-        >
-          {!isEdit ? (
-            <EditOutlined fontSize="inherit" color="primary" />
-          ) : (
-            <PanoramaFishEye fontSize="inherit" color="primary" />
-          )}
-        </IconButton>
-      ) : null}
+      <IconButton
+        onClick={isEdit ? () => onSave(value) : onEdit}
+        aria-label="select item"
+        size="small"
+      >
+        {!isEdit ? (
+          <EditOutlined fontSize="inherit" color="primary" />
+        ) : (
+          <PanoramaFishEye fontSize="inherit" color="primary" />
+        )}
+      </IconButton>
     </Stack>
   )
 }

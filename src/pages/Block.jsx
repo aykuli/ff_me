@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react"
 import { useParams } from "react-router"
 import axios from "axios"
 import { Box, CircularProgress, IconButton, Typography } from "@mui/material"
+import { Typography as JoyTypography } from "@mui/joy"
 import { Delete } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
@@ -154,45 +155,46 @@ const Block = () => {
   }
 
   return (
-    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-      {isLoading && <CircularProgress size="3rem" />}
-      {block && (
-        <div>
-          <div style={{ display: "flex", justifyContent: "end" }}>
-            <IconButton size="small" onClick={handleDel}>
-              <Delete />
-            </IconButton>
-          </div>
-          <CustomLabel
-            lang="en"
-            isEdit={isEditEn}
-            editable
-            title={block.titleEn}
-            onEdit={() => handleEdit("en")}
-            onSave={(v) => handleSave("en", v)}
-          />
-          <CustomLabel
-            lang="ru"
-            isEdit={isEditRu}
-            editable
-            title={block.titleRu}
-            onEdit={() => handleEdit("ru")}
-            onSave={(v) => handleSave("ru", v)}
-          />
-          <Squares {...block} />
-          <ListVideo
-            onTime={block.onTime}
-            relaxTime={block.relaxTime}
-            totalDuration={block.totalDuration}
-            exercises={exercises}
-          />
+    <>
+      <JoyTypography level="h1">Block</JoyTypography>
+      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+        {isLoading && <CircularProgress size="3rem" />}
+        {block && (
           <div>
-            <Typography variant="h5">Exercises</Typography>
-            <ExercisesList list={exercises} />
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              <IconButton size="small" onClick={handleDel}>
+                <Delete />
+              </IconButton>
+            </div>
+            <CustomLabel
+              lang="en"
+              isEdit={isEditEn}
+              title={block.titleEn}
+              onEdit={() => handleEdit("en")}
+              onSave={(v) => handleSave("en", v)}
+            />
+            <CustomLabel
+              lang="ru"
+              isEdit={isEditRu}
+              title={block.titleRu}
+              onEdit={() => handleEdit("ru")}
+              onSave={(v) => handleSave("ru", v)}
+            />
+            <Squares {...block} />
+            <ListVideo
+              onTime={block.onTime}
+              relaxTime={block.relaxTime}
+              totalDuration={block.totalDuration}
+              exercises={exercises}
+            />
+            <div>
+              <Typography variant="h5">Exercises</Typography>
+              <ExercisesList list={exercises} countable />
+            </div>
           </div>
-        </div>
-      )}
-    </Box>
+        )}
+      </Box>
+    </>
   )
 }
 
