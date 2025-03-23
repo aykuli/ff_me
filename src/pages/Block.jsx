@@ -156,44 +156,50 @@ const Block = () => {
 
   return (
     <>
-      <JoyTypography level="h1">Block</JoyTypography>
-      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {isLoading && <CircularProgress size="3rem" />}
-        {block && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <IconButton size="small" onClick={handleDel}>
-                <Delete />
-              </IconButton>
-            </div>
-            <CustomLabel
-              lang="en"
-              isEdit={isEditEn}
-              title={block.titleEn}
-              onEdit={() => handleEdit("en")}
-              onSave={(v) => handleSave("en", v)}
-            />
-            <CustomLabel
-              lang="ru"
-              isEdit={isEditRu}
-              title={block.titleRu}
-              onEdit={() => handleEdit("ru")}
-              onSave={(v) => handleSave("ru", v)}
-            />
-            <Squares {...block} />
-            <ListVideo
-              onTime={block.onTime}
-              relaxTime={block.relaxTime}
-              totalDuration={block.totalDuration}
-              exercises={exercises}
-            />
-            <div>
-              <Typography variant="h5">Exercises</Typography>
-              <ExercisesList list={exercises} countable />
-            </div>
-          </div>
-        )}
-      </Box>
+      {token === null ? (
+        <></>
+      ) : (
+        <>
+          <JoyTypography level="h1">Block</JoyTypography>
+          <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+            {isLoading && <CircularProgress size="3rem" />}
+            {block && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <IconButton size="small" onClick={handleDel}>
+                    <Delete />
+                  </IconButton>
+                </div>
+                <CustomLabel
+                  lang="en"
+                  isEdit={isEditEn}
+                  title={block.titleEn}
+                  onEdit={() => handleEdit("en")}
+                  onSave={(v) => handleSave("en", v)}
+                />
+                <CustomLabel
+                  lang="ru"
+                  isEdit={isEditRu}
+                  title={block.titleRu}
+                  onEdit={() => handleEdit("ru")}
+                  onSave={(v) => handleSave("ru", v)}
+                />
+                <Squares {...block} />
+                <ListVideo
+                  onTime={block.onTime}
+                  relaxTime={block.relaxTime}
+                  totalDuration={block.totalDuration}
+                  exercises={exercises}
+                />
+                <div>
+                  <Typography variant="h5">Exercises</Typography>
+                  <ExercisesList list={exercises} countable />
+                </div>
+              </div>
+            )}
+          </Box>
+        </>
+      )}
     </>
   )
 }

@@ -1,64 +1,124 @@
 import { Box } from "@mui/material"
 import { Typography } from "@mui/joy"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import Video from "./Video"
 
-const relaxVideoSrc = "files/relax.mp4"
+const relaxExercise = {
+  relax: true,
+  filename: "files/relax.mp4",
+  titleEn: "relax",
+  titleRu: "отдых",
+}
 
 const ListVideo = ({ onTime, relaxTime, totalDuration, exercises }) => {
-  const [currIdx, setCurrIdx] = useState(0)
-  const [count, setCount] = useState(0)
-  const [currTime, setCurrtime] = useState(null)
+  let a = 0
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
-  const [currVideo, setCurrVideo] = useState(null)
-  const [nextVideoUrl, setNextideoUrl] = useState(null)
+
+  const [currIdx, setCurrIdx] = useState(0)
+  const [count, setCount] = useState(10)
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    a++
+    if (a > 1) {
+      return
+    }
+
     async function startExerciseRoutine() {
-      setCurrExercise(exercises[0])
-      setNextExercise(exercises[1])
-      setCurrVideo(relaxVideoSrc)
-      await sleep(5000)
+      setCurrExercise(relaxExercise)
+      setNextExercise(exercises[0])
+      let c = 0
+      while (c < 10) {
+        await sleep(1000)
+        setCount((prev) => prev - 1)
+        c++
+      }
 
       for (let i = 0; i < exercises.length; i++) {
         setCurrIdx(i)
         setCurrExercise(exercises[i])
-        setCurrVideo(exercises[i].filename)
+        setCount(onTime)
+        setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
 
-        if (i + 1 < exercises.length) {
-          setNextExercise(exercises[i + 1])
+        let c = 0
+        while (c < onTime) {
+          await sleep(1000)
+          setCount((prev) => prev - 1)
+          c++
         }
 
-        await sleep(onTime * 1000)
-        setCurrVideo(relaxVideoSrc)
-        await sleep(relaxTime * 1000)
+        if (i + 1 < exercises.length) {
+          // finish
+          c = 0
+          while (c < 10) {
+            await sleep(1000)
+            setCount((prev) => prev - 1)
+            c++
+          }
+        } else {
+          setCurrExercise(relaxExercise)
+          setCount(relaxTime)
+
+          c = 0
+          while (c < relaxTime) {
+            await sleep(1000)
+            setCount((prev) => prev - 1)
+            c++
+          }
+        }
       }
-      await sleep(5000)
     }
 
     startExerciseRoutine()
-  }, [exercises])
+  }, [exercises, onTime, relaxTime, a])
 
   return (
     <Box sx={{ mt: 3 }}>
       <Typography level="h2">Current exercise</Typography>
-      {currExercise && currVideo && (
+      {currExercise && (
         <div style={{ position: "relative" }}>
-          <Video urls={[`${process.env.REACT_APP_CDN_URL}${currVideo}`]} />
+          <Video
+            urls={[`${process.env.REACT_APP_CDN_URL}${currExercise.filename}`]}
+          />
           <div
             style={{
               position: "absolute",
               top: 0,
-              margin: 10,
-              padding: 5,
+              margin: 20,
               backgroundColor: "white",
             }}
           >
-            <Typography level="body" color="success">
-              {`${currIdx} ${currExercise.titleEn}`}
-            </Typography>
+            <p
+              style={{
+                fontSize: "2em",
+                fontWeight: 600,
+                color: "#442129",
+                padding: "5px 20px",
+                margin: 0,
+              }}
+            >
+              {`${currExercise.relax ? "" : currIdx + 1} ${
+                currExercise.titleEn
+              }`}
+            </p>
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              top: "20%",
+              margin: 20,
+              backgroundColor: "white",
+              width: 120,
+              height: 120,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: "4em", fontWeight: 600, color: "#442129" }}>
+              {count}
+            </p>
           </div>
         </div>
       )}
@@ -68,18 +128,26 @@ const ListVideo = ({ onTime, relaxTime, totalDuration, exercises }) => {
           <Video
             urls={[`${process.env.REACT_APP_CDN_URL}${nextExercise.filename}`]}
           />
+
           <div
             style={{
               position: "absolute",
               top: 0,
-              margin: 10,
-              padding: 5,
+              margin: 20,
               backgroundColor: "white",
             }}
           >
-            <Typography level="body" color="success">
-              {`${currIdx+1} ${nextExercise.titleEn}`}
-            </Typography>
+            <p
+              style={{
+                fontSize: "2em",
+                fontWeight: 600,
+                color: "#442129",
+                padding: "5px 20px",
+                margin: 0,
+              }}
+            >
+              {`${currIdx + 2} ${nextExercise.titleEn}`}
+            </p>
           </div>
         </div>
       )}
