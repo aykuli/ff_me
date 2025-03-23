@@ -16,7 +16,7 @@ import AuthContext from "../context"
 import DraftBlock from "./DraftBlock"
 
 const DraftBlocksList = () => {
-  const { token, snackbar } = useContext(AuthContext)
+  const { token, snackbar, setDraftBlock } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [draftBlocks, setBlocks] = useState([])
@@ -101,6 +101,7 @@ const DraftBlocksList = () => {
                       key={`${block.title}-${index}`}
                       {...{ block, last: index + 1 === draftBlocks?.length }}
                       markReady={markReady}
+                      onClick={() => setDraftBlock(block)}
                     />
                   )
                 })}

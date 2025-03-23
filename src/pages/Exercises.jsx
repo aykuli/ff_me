@@ -4,7 +4,6 @@ import { Box, CircularProgress } from "@mui/material"
 import { Typography } from "@mui/joy"
 
 import AuthContext from "../context"
-import { buildRequest } from "../helpers/block_helpers"
 import ExercisesList from "../components/ExercisesList"
 
 const Exercises = () => {

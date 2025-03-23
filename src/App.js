@@ -1,4 +1,4 @@
-import { useEffect, useState, useLayoutEffect } from "react"
+import { useEffect, useState, useLayoutEffect, useCallback } from "react"
 import { RouterProvider } from "react-router-dom"
 import CssBaseline from "@mui/material/CssBaseline"
 import axios from "axios"
@@ -16,6 +16,15 @@ const App = () => {
   const [openSnackbar, setOpenSb] = useState(false)
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
+
+  useEffect(() => {
+    if (draftBlock) {
+      localStorage.setItem(
+        process.env.REACT_APP_DRAFT_ID_LS_NAME,
+        draftBlock.id
+      )
+    }
+  }, [draftBlock])
 
   const addBlockExercise = (exercise) => {
     mutateExerciseInBlock(exercise, "add")
@@ -49,23 +58,55 @@ const App = () => {
     })
       .then((response) => {
         setSbType("success")
-        sbMsg("exercise was succesffully added to the block")
+        setSbMsg(`exercise was succesffully ${action}ed to the block`)
       })
       .catch((e) => {
         setSbType("error")
-        sbMsg("Server exercises fetch error")
+        setSbMsg("Server exercises fetch error")
       })
       .finally(() => {
         setOpenSb(true)
       })
   }
 
+  const fetchDraft = useCallback(
+    (block_id) => {
+      if (draftBlock) {
+        return
+      }
+
+      axios({
+        method: "post",
+        url: `${process.env.REACT_APP_API_URL}/blocks/${block_id}`,
+        data: buildRequest(draftBlock),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: token,
+        },
+      })
+        .then((response) => {
+          setDraftBlock(response.data)
+        })
+        .catch((e) => {
+          setOpenSb(true)
+          setSbType("error")
+          setSbMsg("Block fetch error")
+        })
+    },
+    [token, draftBlock]
+  )
+
   useLayoutEffect(() => {
     const stToken = localStorage.getItem(process.env.REACT_APP_TOKEN_LS_NAME)
     if (stToken) {
       setToken(stToken)
     }
-  }, [])
+    const draftId = localStorage.getItem(process.env.REACT_APP_DRAFT_ID_LS_NAME)
+    if (draftId) {
+      fetchDraft(draftId)
+    }
+  }, [fetchDraft])
 
   useEffect(() => {
     if (token === null || token === undefined) {

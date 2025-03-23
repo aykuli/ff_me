@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 
 import {
-  Box,
   IconButton,
   Container,
   Menu,
@@ -62,72 +61,64 @@ const Header = ({ children }) => {
         </Alert>
       </Snackbar>
       <Container maxWidth="md">
-        <Box
-          sx={{
-            width: "calc(100%)",
-            maxWidth: 640,
-            bgcolor: "background.paper",
-            boxShadow: 1,
-            borderRadius: 2,
-            p: 2,
-          }}
-        >
-          {draftBlock && (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={openMn ? "long-menu" : undefined}
+            aria-expanded={openMn ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={(e) => {
+              setAnchorEl(openMn ? null : e.currentTarget)
+              setOpenMn(!openMn)
+            }}
+            size="large"
+          >
+            <OtherHouses />
+          </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="more"
+            id="long-button"
+            aria-controls={openMn ? "long-menu" : undefined}
+            aria-expanded={openMn ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={() => logout()}
+          >
+            <Logout />
+          </IconButton>
+        </div>
+        <Divider style={{ marginBottom: "3vh" }} />
+        {draftBlock && (
+          <>
             <DraftBlockAlert
               block={draftBlock}
               deleteBlockExercise={deleteBlockExercise}
             />
-          )}
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <IconButton
-              edge="end"
-              aria-label="more"
-              id="long-button"
-              aria-controls={openMn ? "long-menu" : undefined}
-              aria-expanded={openMn ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={(e) => {
-                setAnchorEl(openMn ? null : e.currentTarget)
-                setOpenMn(!openMn)
-              }}
-              size="large"
-            >
-              <OtherHouses />
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="more"
-              id="long-button"
-              aria-controls={openMn ? "long-menu" : undefined}
-              aria-expanded={openMn ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={() => logout()}
-            >
-              <Logout />
-            </IconButton>
-          </div>
-          <Divider style={{ marginBottom: "3vh" }} />
+            <Divider style={{ marginBottom: "3vh" }} />
+          </>
+        )}
 
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={openMn}
-            onClose={() => setOpenMn(false)}
-          >
-            {menuRoutes.map(({ route, title }) => {
-              return (
-                <MenuItem
-                  disabled={route === currRoute}
-                  key={route}
-                  onClick={() => navigate(route)}
-                >
-                  {title}
-                </MenuItem>
-              )
-            })}
-          </Menu>
-          {children}
-        </Box>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openMn}
+          onClose={() => setOpenMn(false)}
+        >
+          {menuRoutes.map(({ route, title }) => {
+            return (
+              <MenuItem
+                disabled={route === currRoute}
+                key={route}
+                onClick={() => navigate(route)}
+              >
+                {title}
+              </MenuItem>
+            )
+          })}
+        </Menu>
+        {children}
       </Container>
     </>
   )

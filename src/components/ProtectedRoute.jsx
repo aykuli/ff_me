@@ -1,5 +1,5 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom"
-import { useContext, useEffect, useLayoutEffect, useState } from "react"
+import { Navigate, Outlet } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
 
 import AuthContext from "../context"
 
