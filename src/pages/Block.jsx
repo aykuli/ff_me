@@ -1,7 +1,14 @@
 import { useEffect, useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router"
 import axios from "axios"
-import { Box, CircularProgress, IconButton, Typography } from "@mui/material"
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Typography,
+  Button,
+} from "@mui/material"
 import { Typography as JoyTypography } from "@mui/joy"
 import { Delete } from "@mui/icons-material"
 
@@ -13,8 +20,9 @@ import ListVideo from "../components/ExercisesListVideo"
 
 const Block = () => {
   let { id } = useParams()
-  const { token, snackbar } = useContext(AuthContext)
+  const { token, snackbar, setDraftBlock } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
+  const navigate = useNavigate()
 
   const [block, setBlock] = useState(null)
   const [exercises, setExercises] = useState([])
@@ -154,6 +162,11 @@ const Block = () => {
       })
   }
 
+  const handleChooseExercise = () => {
+    setDraftBlock(block)
+    navigate("/exercises")
+  }
+
   return (
     <>
       {token === null ? (
@@ -195,8 +208,21 @@ const Block = () => {
                 )}
                 <div>
                   <Typography variant="h5">Exercises</Typography>
-                  <ExercisesList list={exercises} countable />
                 </div>
+
+                {(block.totalDuration * 60) / (block.onTime + block.relaxTime) <
+                  exercises.length && (
+                  <div>
+                    <p>Please, add some exercise.</p>
+                    <Button onClick={handleChooseExercise}>
+                      Go to exercises page
+                    </Button>
+                  </div>
+                )}
+
+                {exercises.length && (
+                  <ExercisesList list={exercises} countable />
+                )}
               </div>
             )}
           </Box>
