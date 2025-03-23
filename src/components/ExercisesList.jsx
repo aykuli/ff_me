@@ -23,7 +23,9 @@ const ExercisesList = ({ list, onSave, draftBlock, countable }) => {
                   <Item
                     exercise={exercise}
                     onAdd={onSave}
-                    included={draftBlock?.exercisesIds.includes(exercise.id)}
+                    included={draftBlock?.exercises
+                      .map((e) => e.id)
+                      .includes(exercise.id)}
                   />
                 </TreeItem>
               </SimpleTreeView>

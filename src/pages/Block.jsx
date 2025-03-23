@@ -224,7 +224,7 @@ const Block = () => {
   }
 
   const handleChooseExercise = () => {
-    setDraftBlock(block)
+    setDraftBlock({ ...block, exercises })
     navigate("/exercises")
   }
 

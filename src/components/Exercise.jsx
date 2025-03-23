@@ -147,7 +147,7 @@ const Item = ({ exercise, onAdd, included }) => {
               variant="contained"
               edge="end"
               size="small"
-              onClick={() => onAdd(value.id)}
+              onClick={() => onAdd(value)}
               color={included ? "secondary" : "primary"}
             >
               <Add />

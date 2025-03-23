@@ -38,37 +38,6 @@ const Exercises = () => {
       .finally(() => setIsLoading(false))
   }, [token, setMsg, setType, setOpen])
 
-  const saveBlockExercise = (exercise_id) => {
-    if (!draftBlock) {
-      return
-    }
-
-    addBlockExercise(exercise_id)
-
-    axios({
-      method: "post",
-      url: `${process.env.REACT_APP_API_URL}/blocks/${draftBlock.id}`,
-      data: buildRequest(draftBlock),
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: token,
-      },
-    })
-      .then((response) => {
-        setType("success")
-        setMsg("exercise was succesffully added to the block")
-      })
-      .catch((e) => {
-        setType("error")
-        setMsg("Server exercises fetch error")
-      })
-      .finally(() => {
-        setOpen(true)
-        setIsLoading(false)
-      })
-  }
-
   return (
     <>
       <Typography level="h1">Exercises list</Typography>
@@ -76,7 +45,7 @@ const Exercises = () => {
         {isLoading ? (
           <CircularProgress size="3rem" />
         ) : (
-          <ExercisesList {...{ list, onSave: saveBlockExercise, draftBlock }} />
+          <ExercisesList {...{ list, onSave: addBlockExercise, draftBlock }} />
         )}
       </Box>
     </>

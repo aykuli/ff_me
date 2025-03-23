@@ -19,7 +19,8 @@ import AuthContext from "../context"
 import DraftBlockAlert from "./DraftBlockAlert"
 
 const Header = ({ children }) => {
-  const { token, setToken, draftBlock, snackbar } = useContext(AuthContext)
+  const { token, setToken, draftBlock, snackbar, deleteBlockExercise } =
+    useContext(AuthContext)
   const { open, setOpen, msg, setMsg, type } = snackbar
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -63,7 +64,7 @@ const Header = ({ children }) => {
       <Container maxWidth="md">
         <Box
           sx={{
-            width: "calc(100%-",
+            width: "calc(100%)",
             maxWidth: 640,
             bgcolor: "background.paper",
             boxShadow: 1,
@@ -71,7 +72,12 @@ const Header = ({ children }) => {
             p: 2,
           }}
         >
-          {draftBlock && <DraftBlockAlert block={draftBlock} />}
+          {draftBlock && (
+            <DraftBlockAlert
+              block={draftBlock}
+              deleteBlockExercise={deleteBlockExercise}
+            />
+          )}
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <IconButton
               edge="end"
