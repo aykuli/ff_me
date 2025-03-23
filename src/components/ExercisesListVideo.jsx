@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import { Typography } from "@mui/joy"
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useState } from "react"
 import Video from "./Video"
 
 const relaxExercise = {
@@ -17,6 +17,7 @@ const ListVideo = ({ onTime, relaxTime, totalDuration, exercises }) => {
 
   const [currIdx, setCurrIdx] = useState(0)
   const [count, setCount] = useState(10)
+
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
   useLayoutEffect(() => {

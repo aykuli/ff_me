@@ -105,8 +105,8 @@ const Block = () => {
       method: "POST",
       url: `${process.env.REACT_APP_API_URL}/blocks/${id}`,
       data: {
-        title_en: block.titleEn,
-        title_ru: block.titleRu,
+        titleEn: block.titleEn,
+        titleRu: block.titleRu,
       },
       headers: {
         "Content-Type": "application/json",
@@ -185,12 +185,14 @@ const Block = () => {
                   onSave={(v) => handleSave("ru", v)}
                 />
                 <Squares {...block} />
-                <ListVideo
-                  onTime={block.onTime}
-                  relaxTime={block.relaxTime}
-                  totalDuration={block.totalDuration}
-                  exercises={exercises}
-                />
+                {block.draft ? null : (
+                  <ListVideo
+                    onTime={block.onTime}
+                    relaxTime={block.relaxTime}
+                    totalDuration={block.totalDuration}
+                    exercises={exercises}
+                  />
+                )}
                 <div>
                   <Typography variant="h5">Exercises</Typography>
                   <ExercisesList list={exercises} countable />
