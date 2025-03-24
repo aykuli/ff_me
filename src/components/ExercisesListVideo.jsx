@@ -10,7 +10,7 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
       {currExercise && (
         <div style={{ position: "relative" }}>
           <Video
-            urls={[`${process.env.REACT_APP_CDN_URL}${currExercise.filename}`]}
+            urls={[`${process.env.REACT_APP_CDN_URL}/${currExercise.filename}`]}
           />
           <div
             style={{
@@ -57,7 +57,7 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
       {nextExercise && (
         <div style={{ position: "relative" }}>
           <Video
-            urls={[`${process.env.REACT_APP_CDN_URL}${nextExercise.filename}`]}
+            urls={[`${process.env.REACT_APP_CDN_URL}/${nextExercise.filename}`]}
           />
 
           <div

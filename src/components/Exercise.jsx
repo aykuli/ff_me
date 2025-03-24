@@ -20,7 +20,7 @@ const Item = ({ exercise, onAdd, included }) => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-  const url = `${process.env.REACT_APP_CDN_URL}${exercise.filename}`
+  const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
 
   const src = `${process.env.REACT_APP_API_URL}/exercises`
 
