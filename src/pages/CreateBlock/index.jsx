@@ -103,7 +103,7 @@ const CreateBlock = () => {
             <TextField
               value={body.titleEn}
               fullWidth
-              id="title_en"
+              id="titleEn"
               label="title english"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleEn", e.target.value)}
@@ -113,7 +113,7 @@ const CreateBlock = () => {
             <TextField
               value={body.titleRu}
               fullWidth
-              id="title_ru"
+              id="titleRu"
               label="title russian"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleRu", e.target.value)}
@@ -127,7 +127,7 @@ const CreateBlock = () => {
               }
               fullWidth
               type="number"
-              id="total_duration"
+              id="totalDuration"
               label="Total duration time (minutes)"
               variant="outlined"
             />

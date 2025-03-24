@@ -34,8 +34,8 @@ const Item = ({ exercise, onAdd, included }) => {
       method: "POST",
       url: `${src}/${value.id}`,
       data: {
-        title_en: value.titleEn,
-        title_ru: value.titleRu,
+        titleEn: value.titleEn,
+        titleRu: value.titleRu,
       },
       headers: {
         "Content-Type": "application/json",
@@ -83,8 +83,8 @@ const Item = ({ exercise, onAdd, included }) => {
       method: "DELETE",
       url: `${src}/${value.id}`,
       data: {
-        title_en: value.titleEn,
-        title_ru: value.titleRu,
+        titleEn: value.titleEn,
+        titleRu: value.titleRu,
       },
       headers: {
         "Access-Control-Allow-Origin": "*", // todo change

@@ -47,8 +47,8 @@ const CreateExercise = () => {
     setIsUploading(true)
     const data = new FormData()
     data.append("file", file)
-    data.append("title_en", titleEn)
-    data.append("title_ru", titleRu)
+    data.append("titleEn", titleEn)
+    data.append("titleRu", titleRu)
 
     axios({
       method: "POST",
@@ -107,7 +107,7 @@ const CreateExercise = () => {
           <Grid size={"100%"}>
             <TextField
               fullWidth
-              id="title_en"
+              id="titleRn"
               label="title english"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleEn", e)}
@@ -116,7 +116,7 @@ const CreateExercise = () => {
           <Grid size={"100%"}>
             <TextField
               fullWidth
-              id="title_ru"
+              id="titleRu"
               label="title russian"
               variant="outlined"
               onChange={(e) => handleTxtInputValue("titleRu", e)}

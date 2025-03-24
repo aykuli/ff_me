@@ -202,8 +202,8 @@ const Block = () => {
       method: "DELETE",
       url: `${process.env.REACT_APP_API_URL}/blocks/${id}`,
       data: {
-        title_en: block.titleEn,
-        title_ru: block.titleRu,
+        titleEn: block.titleEn,
+        titleRu: block.titleRu,
       },
       headers: {
         "Access-Control-Allow-Origin": "*", // todo change
