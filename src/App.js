@@ -46,6 +46,10 @@ const App = () => {
   }
 
   const mutateExerciseInBlock = (exercise, action) => {
+    if (!draftBlock) {
+      return
+    }
+
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}/blocks/${draftBlock.id}/${action}/exercise/${exercise.id}`,
@@ -71,7 +75,7 @@ const App = () => {
 
   const fetchDraft = useCallback(
     (block_id) => {
-      if (draftBlock) {
+      if (!draftBlock) {
         return
       }
 
