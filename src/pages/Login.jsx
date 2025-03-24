@@ -4,10 +4,10 @@ import axios from "axios"
 
 import { Container } from "@mui/material"
 
-import AuthForm from "../../components/AuthForm"
-import ProtectedRoute from "../../components/ProtectedRoute"
+import AuthForm from "../components/AuthForm"
+import ProtectedRoute from "../components/ProtectedRoute"
 
-import AuthContext from "../../context"
+import AuthContext from "../context"
 
 const Login = () => {
   const { setToken } = useContext(AuthContext)

@@ -10,6 +10,7 @@ import {
   Divider,
   Snackbar,
   Alert,
+  Typography,
 } from "@mui/material"
 import { Logout, OtherHouses } from "@mui/icons-material"
 
@@ -61,34 +62,40 @@ const Header = ({ children }) => {
         </Alert>
       </Snackbar>
       <Container maxWidth="md">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            edge="end"
-            aria-label="more"
-            id="long-button"
-            aria-controls={openMn ? "long-menu" : undefined}
-            aria-expanded={openMn ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={(e) => {
-              setAnchorEl(openMn ? null : e.currentTarget)
-              setOpenMn(!openMn)
-            }}
-            size="large"
-          >
-            <OtherHouses />
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="more"
-            id="long-button"
-            aria-controls={openMn ? "long-menu" : undefined}
-            aria-expanded={openMn ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={() => logout()}
-          >
-            <Logout />
-          </IconButton>
-        </div>
+        {currRoute === "/login" ? (
+          <Typography variant="h3">
+            Training set application
+          </Typography>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <IconButton
+              edge="end"
+              aria-label="more"
+              id="long-button"
+              aria-controls={openMn ? "long-menu" : undefined}
+              aria-expanded={openMn ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={(e) => {
+                setAnchorEl(openMn ? null : e.currentTarget)
+                setOpenMn(!openMn)
+              }}
+              size="large"
+            >
+              <OtherHouses />
+            </IconButton>
+            <IconButton
+              edge="end"
+              aria-label="more"
+              id="long-button"
+              aria-controls={openMn ? "long-menu" : undefined}
+              aria-expanded={openMn ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={() => logout()}
+            >
+              <Logout />
+            </IconButton>
+          </div>
+        )}
         <Divider style={{ marginBottom: "3vh" }} />
         {draftBlock && (
           <>

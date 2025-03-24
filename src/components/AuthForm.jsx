@@ -16,7 +16,7 @@ const AuthForm = (props) => {
   const { setLogin, pwdInputType, setPassword, setPwdInputType } = props
 
   return (
-    <Container style={{ paddingTop: "10vh", paddingBottom: "5vh" }}>
+    <Container style={{ paddingTop: "1vh"}}>
       <Box
         component="form"
         onSubmit={onSave}
