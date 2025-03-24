@@ -2,7 +2,7 @@ const buildRequest = (body) => {
   return {
     titleEn: body.titleEn,
     titleRu: body.titleRu,
-    totalDuration: body.totalDuration,
+    totalDuration: Number(body.totalDuration),
     onTime: body.onTime,
     relaxTime: body.relaxTime,
     draft: body.draft,

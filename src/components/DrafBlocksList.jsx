@@ -57,8 +57,7 @@ const DraftBlocksList = () => {
 
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_API_URL}/blocks/${id}`,
-      data: { draft: false },
+      url: `${process.env.REACT_APP_API_URL}/blocks/${id}/toggle_draft`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -71,7 +70,7 @@ const DraftBlocksList = () => {
       .catch((e) => {
         setOpen(true)
         setType("error")
-        setMsg("Server exercises fetch error")
+        setMsg(`fetch error: ${e}`)
       })
       .finally(() => {
         fetchBlocks()
