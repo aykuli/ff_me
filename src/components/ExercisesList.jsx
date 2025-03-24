@@ -8,8 +8,8 @@ import Item from "./Exercise"
 const ExercisesList = ({ list, onSave, draftBlock, countable }) => {
   return (
     <List>
-      {list.length
-        ? list.map((exercise, idx) => {
+      {list?.length
+        ? list?.map((exercise, idx) => {
             return (
               <SimpleTreeView key={`${exercise.id}-${idx}`} id={exercise.id}>
                 <TreeItem
@@ -23,9 +23,13 @@ const ExercisesList = ({ list, onSave, draftBlock, countable }) => {
                   <Item
                     exercise={exercise}
                     onAdd={onSave}
-                    included={draftBlock?.exercises
-                      .map((e) => e.id)
-                      .includes(exercise.id)}
+                    included={
+                      draftBlock?.exercises
+                        ? draftBlock?.exercises
+                            .map((e) => e.id)
+                            .includes(exercise.id)
+                        : false
+                    }
                   />
                 </TreeItem>
               </SimpleTreeView>

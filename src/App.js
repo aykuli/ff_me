@@ -30,7 +30,12 @@ const App = () => {
     mutateExerciseInBlock(exercise, "add")
 
     setDraftBlock((prev) => {
-      return { ...prev, exercises: [...prev.exercises, exercise] }
+      return {
+        ...prev,
+        exercises: prev.exercises?.length
+          ? [...prev.exercises, exercise]
+          : [exercise],
+      }
     })
   }
 
@@ -38,14 +43,19 @@ const App = () => {
     mutateExerciseInBlock(exercise, "remove")
 
     setDraftBlock((prev) => {
-      return {
-        ...prev,
-        exercises: prev.exercises.filter((e) => e.id !== exercise.id),
+      let exercises = []
+      if (prev.exercises?.length) {
+        exercises = prev.exercises.filter((e) => e.id !== exercise.id)
       }
+      return { ...prev, exercises }
     })
   }
 
   const mutateExerciseInBlock = (exercise, action) => {
+    if (!draftBlock) {
+      return
+    }
+
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}/blocks/${draftBlock.id}/${action}/exercise/${exercise.id}`,
@@ -71,14 +81,13 @@ const App = () => {
 
   const fetchDraft = useCallback(
     (block_id) => {
-      if (draftBlock) {
+      if (draftBlock || !token) {
         return
       }
 
       axios({
-        method: "post",
+        method: "get",
         url: `${process.env.REACT_APP_API_URL}/blocks/${block_id}`,
-        data: buildRequest(draftBlock),
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",

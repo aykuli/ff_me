@@ -42,12 +42,12 @@ const BlocksList = () => {
       .finally(() => setIsLoading(false))
   }, [token, setMsg, setType, setOpen])
 
-  const handleClick = (blockId) => {
+  const handleClick = (block) => {
     setIsLoading(true)
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API_URL}/exercises/list`,
-      data: { blockIds: [blockId] },
+      data: { blockIds: [block.id] },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -56,7 +56,7 @@ const BlocksList = () => {
     })
       .then((response) => {
         setExercises((prev) => {
-          return { ...prev, [blockId]: response.data }
+          return { ...prev, [block.id]: response.data }
         })
       })
       .catch((e) => {
@@ -81,10 +81,7 @@ const BlocksList = () => {
               <TreeItem
                 itemId={`block-${block.id}`}
                 label={
-                  <BlockLabel
-                    {...block}
-                    onClick={() => handleClick(block.id)}
-                  />
+                  <BlockLabel {...block} onClick={() => handleClick(block)} />
                 }
                 color="warning"
                 slots={{
@@ -98,7 +95,7 @@ const BlocksList = () => {
                   return (
                     <>
                       <TreeItem
-                        key={index}
+                        key={`${block.id}-${exr.id}-${index}`}
                         itemId={`${block.id}-${exr.id}-${index}`}
                         label={`|-- ${exr.titleEn}`}
                       />
