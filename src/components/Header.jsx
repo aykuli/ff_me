@@ -63,9 +63,7 @@ const Header = ({ children }) => {
       </Snackbar>
       <Container maxWidth="md">
         {currRoute === "/login" ? (
-          <Typography variant="h3">
-            Training set application
-          </Typography>
+          <Typography variant="h3">Training set application</Typography>
         ) : (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <IconButton

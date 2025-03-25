@@ -17,9 +17,10 @@ const DraftBlock = ({ block, last, markReady, onClick }) => {
     totalDuration,
     onTime,
     relaxTime,
-    exercisesIds,
+    exercises,
     createdAt,
   } = block
+  console.log(block)
   const totalExercises = (totalDuration * 60) / (onTime + relaxTime)
 
   return (
@@ -33,7 +34,7 @@ const DraftBlock = ({ block, last, markReady, onClick }) => {
           <Typography level="title-md">{titleEn}</Typography>
           <Typography level="body-sm">{titleRu}</Typography>
         </ListItemButton>
-        {totalExercises === exercisesIds.length && (
+        {totalExercises === exercises?.length && (
           <IconButton color="success" onClick={() => markReady(id)}>
             <Flaky />
           </IconButton>
@@ -54,7 +55,7 @@ const DraftBlock = ({ block, last, markReady, onClick }) => {
         </Div>
 
         <div>
-          <span style={{ fontWeight: 900 }}>{exercisesIds?.length || 0}</span>
+          <span style={{ fontWeight: 900 }}>{exercises?.length || 0}</span>
           <span> of </span>
           <span style={{ fontWeight: 900 }}>{totalExercises}</span>
           <span> exercises chosen</span>

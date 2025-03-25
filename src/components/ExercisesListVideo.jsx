@@ -5,7 +5,9 @@ import Video from "./Video"
 const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
   return (
     <Box sx={{ mt: 3 }}>
-      <Button variant="contained" onClick={onPlay}>Play</Button>
+      <Button variant="contained" onClick={onPlay}>
+        Play
+      </Button>
       <Typography level="h2">Current exercise</Typography>
       {currExercise && (
         <div style={{ position: "relative" }}>
@@ -17,7 +19,6 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
               position: "absolute",
               top: 0,
               margin: 20,
-              backgroundColor: "white",
             }}
           >
             <p
@@ -26,18 +27,32 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
                 fontWeight: 600,
                 color: "#442129",
                 padding: "5px 20px",
+                marginBottom: 5,
                 margin: 0,
+                backgroundColor: "white",
               }}
             >
               {`${currExercise.relax ? "" : currIdx + 1} ${
                 currExercise.titleEn
               }`}
             </p>
+            <span
+              style={{
+                fontSize: "1.5em",
+                fontWeight: 600,
+                color: "#554438",
+                padding: "5px 10px",
+                margin: 0,
+                backgroundColor: "white",
+              }}
+            >
+              {currExercise.side}
+            </span>
           </div>
           <div
             style={{
               position: "absolute",
-              top: "20%",
+              top: "30%",
               margin: 20,
               backgroundColor: "white",
               width: 120,
