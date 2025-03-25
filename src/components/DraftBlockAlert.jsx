@@ -15,7 +15,7 @@ const DraftBlockAlert = ({ block, deleteBlockExercise }) => {
 
   return (
     <Alert variant="outlined" severity="warning">
-      <AlertTitle>{`${block.exercisesIds.length} of ${exercisesCount} exercises chosen`}</AlertTitle>
+      <AlertTitle>{`${block.exercises?.length} of ${exercisesCount} exercises chosen`}</AlertTitle>
       You are currently choosing exercises for{" "}
       <Button
         onClick={() => navigate(`blocks/${block.id}`)}
@@ -35,15 +35,21 @@ const DraftBlockAlert = ({ block, deleteBlockExercise }) => {
           <div
             style={{
               display: "flex",
-              flex: "0 0 50%",
               alignItems: "center",
-              marginTop: idx === 0 ? 10 : 2,
+              marginTop: idx === 0 ? 20 : 10,
+              paddingBottom: 5,
+              borderBottom: "1px solid grey",
             }}
           >
-            <div style={{ width: 20 }}>{idx}</div>
-            <div style={{ width: 100, marginRight: 10 }}>{e.titleEn}</div>
-            <div style={{ width: 100, marginRight: 10 }}>{e.titleRu}</div>
-            <div>
+            <div style={{ width: 30 }}>{e.id}</div>
+            <div style={{ flexGrow: 1 }}>
+              <div>{e.titleEn}</div>
+              <div>{e.titleRu}</div>
+              <span style={{ backgroundColor: "gray", padding: "2px 5px" }}>
+                {e.side}
+              </span>
+            </div>
+            <div style={{ width: 50 }}>
               <IconButton
                 size="small"
                 color="info"
