@@ -82,12 +82,9 @@ const Item = ({ exercise, onAdd, included }) => {
     axios({
       method: "DELETE",
       url: `${src}/${value.id}`,
-      data: {
-        titleEn: value.titleEn,
-        titleRu: value.titleRu,
-      },
       headers: {
         "Access-Control-Allow-Origin": "*", // todo change
+        Authorization: token,
       },
     })
       .then((response) => {

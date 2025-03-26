@@ -24,6 +24,7 @@ const relaxExercise = {
   titleEn: "relax",
   titleRu: "отдых",
 }
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const Block = () => {
   let { id } = useParams()
@@ -37,7 +38,6 @@ const Block = () => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
@@ -201,12 +201,9 @@ const Block = () => {
     axios({
       method: "DELETE",
       url: `${process.env.REACT_APP_API_URL}/blocks/${id}`,
-      data: {
-        titleEn: block.titleEn,
-        titleRu: block.titleRu,
-      },
       headers: {
         "Access-Control-Allow-Origin": "*", // todo change
+        Authorization: token,
       },
     })
       .then((response) => {

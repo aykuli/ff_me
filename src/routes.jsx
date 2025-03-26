@@ -2,8 +2,9 @@ import { createBrowserRouter } from "react-router-dom"
 
 import Exercises from "./pages/Exercises"
 import CreateExercise from "./pages/CreateExercise"
-import Training from "./pages/Training"
-import List from "./pages/Projects"
+import Workout from "./pages/Workout"
+import WorkoutsList from "./pages/WorkoutsList"
+import CreateWorkout from "./pages/CreateWorkout"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Dashboard from "./pages/Dashboard"
@@ -49,12 +50,16 @@ const routes = createBrowserRouter([
         element: <BlocksList />,
       },
       {
-        path: "/projects",
-        element: <List />,
+        path: "/workouts",
+        element: <WorkoutsList />,
       },
       {
-        path: "/projects/:id",
-        element: <Training />,
+        path: "/workouts/create",
+        element: <CreateWorkout />,
+      },
+      {
+        path: "/workouts/:id",
+        element: <Workout />,
       },
     ],
   },
@@ -67,7 +72,7 @@ const menuRoutes = [
   { route: "/exercises/create", title: "Create exercise" },
   { route: "/blocks", title: "Blocks" },
   { route: "/blocks/create", title: "Create block" },
-  { route: "/projects", title: "Projects" },
-  { route: "/projects/create", title: "Create project" },
+  { route: "/workouts", title: "Workouts" },
+  { route: "/workouts/create", title: "Create workout" },
 ]
 export { menuRoutes }

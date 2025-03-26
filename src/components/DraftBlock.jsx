@@ -20,7 +20,6 @@ const DraftBlock = ({ block, last, markReady, onClick }) => {
     exercises,
     createdAt,
   } = block
-  console.log(block)
   const totalExercises = (totalDuration * 60) / (onTime + relaxTime)
 
   return (
