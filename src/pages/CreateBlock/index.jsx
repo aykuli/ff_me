@@ -49,7 +49,7 @@ const CreateBlock = () => {
         setType("success")
 
         setDraftBlock({ ...body, id: response.data.id })
-        navigate("/exercises")
+        navigate(`/exercises/${response.data.id}`)
       })
       .catch((e) => {
         setMsg("Exercise save error: " + e)
