@@ -10,7 +10,7 @@ import {
   Typography,
   Button,
 } from "@mui/material"
-import { Delete } from "@mui/icons-material"
+import { Delete, Flaky } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
 import AuthContext from "../context"
@@ -207,6 +207,26 @@ const Workout = () => {
     }
   }
 
+  const toggleDraft = () => {
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/trainings/${id}/toggle_draft`,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        setWorkout(response.data)
+      })
+      .catch((e) => {
+        setOpen(true)
+        setType("error")
+        setMsg(`fetch error: ${e}`)
+      })
+  }
+
   return (
     <>
       {token === null || !workout ? (
@@ -214,11 +234,24 @@ const Workout = () => {
       ) : (
         <>
           <JoyTypography level="h1">Workout</JoyTypography>
+          {workout ? (
+            <JoyTypography level="p" color="warning">
+              {workout.draft ? "draft" : "ready"}
+            </JoyTypography>
+          ) : null}
           <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
             {isLoading && <CircularProgress size="3rem" />}
             {workout && (
               <div>
                 <div style={{ display: "flex", justifyContent: "end" }}>
+                  <IconButton
+                    color={workout.draft ? "success" : undefined}
+                    size="small"
+                    onClick={toggleDraft}
+                    title="toggle draft"
+                  >
+                    <Flaky />
+                  </IconButton>
                   <IconButton size="small" onClick={handleDel}>
                     <Delete />
                   </IconButton>
@@ -248,8 +281,8 @@ const Workout = () => {
                     }}
                   />
                 )}
-                <div>
-                  <Typography variant="h5">Exercises</Typography>
+                <div style={{ marginTop: 20, marginBottom: 10 }}>
+                  <Typography variant="h5">Blocks</Typography>
                 </div>
 
                 {!workout.blocks?.length && (

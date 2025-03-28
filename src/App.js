@@ -17,14 +17,14 @@ const App = () => {
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  useEffect(() => {
-    if (draftBlock) {
-      localStorage.setItem(
-        process.env.REACT_APP_DRAFT_ID_LS_NAME,
-        draftBlock.id
-      )
-    }
-  }, [draftBlock])
+  // useEffect(() => {
+  //   if (draftBlock) {
+  //     localStorage.setItem(
+  //       process.env.REACT_APP_DRAFT_ID_LS_NAME,
+  //       draftBlock.id
+  //     )
+  //   }
+  // }, [draftBlock])
 
   const addBlockExercise = (exercise) => {
     setDraftBlock((prev) => {
@@ -126,6 +126,17 @@ const App = () => {
     localStorage.setItem(process.env.REACT_APP_TOKEN_LS_NAME, token)
   }, [token])
 
+  const mutateDraftBlock = (block) => {
+    if (!block) {
+      setDraftBlock(null)
+      localStorage.clear(process.env.REACT_APP_DRAFT_ID_LS_NAME)
+      return
+    }
+
+    localStorage.setItem(process.env.REACT_APP_DRAFT_ID_LS_NAME, block.id)
+    setDraftBlock(block)
+  }
+
   return (
     <>
       <CssBaseline />
@@ -134,7 +145,7 @@ const App = () => {
           token,
           setToken,
           draftBlock,
-          setDraftBlock,
+          setDraftBlock: mutateDraftBlock,
           addBlockExercise: (exer) => mutateExerciseInBlock(exer, "add"),
           deleteBlockExercise: (exer) => mutateExerciseInBlock(exer, "remove"),
           snackbar: {
