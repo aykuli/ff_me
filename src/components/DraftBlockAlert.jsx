@@ -45,9 +45,13 @@ const DraftBlockAlert = ({ block, deleteBlockExercise }) => {
             <div style={{ flexGrow: 1 }}>
               <div>{e.titleEn}</div>
               <div>{e.titleRu}</div>
-              <span style={{ backgroundColor: "gray", padding: "2px 5px" }}>
-                {e.side}
-              </span>
+              {e.side ? (
+                <span
+                  style={{ backgroundColor: "#d2cfcf", padding: "2px 5px" }}
+                >
+                  {e.side}
+                </span>
+              ) : null}
             </div>
             <div style={{ width: 50 }}>
               <IconButton

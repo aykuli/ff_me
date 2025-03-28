@@ -33,11 +33,9 @@ const Block = () => {
   const navigate = useNavigate()
 
   const [block, setBlock] = useState(null)
-  const [exercises, setExercises] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
-
 
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
@@ -46,8 +44,12 @@ const Block = () => {
   const [count, setCount] = useState(10)
 
   async function startExerciseRoutine() {
+    if (!block.exercises?.length) {
+      return
+    }
+
     setCurrExercise(relaxExercise)
-    setNextExercise(exercises[0])
+    setNextExercise(block.exercises[0])
     let c = 0
     while (c < 10) {
       await sleep(1000)
@@ -55,11 +57,13 @@ const Block = () => {
       c++
     }
 
-    for (let i = 0; i < exercises.length; i++) {
+    for (let i = 0; i < block.exercises.length; i++) {
       setCurrIdx(i)
-      setCurrExercise(exercises[i])
+      setCurrExercise(block.exercises[i])
       setCount(block?.onTime)
-      setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
+      setNextExercise(
+        i + 1 < block.exercises.length ? block.exercises[i + 1] : null
+      )
 
       c = 0
       while (c < block?.onTime) {
@@ -68,7 +72,7 @@ const Block = () => {
         c++
       }
 
-      if (i + 1 > exercises.length) {
+      if (i + 1 > block.exercises.length) {
         // finish
         c = 0
         while (c < 10) {
@@ -114,33 +118,8 @@ const Block = () => {
         setMsg("Server exercises fetch error")
       })
       .finally(() => {
-        getExercises()
+        setIsLoading(false)
       })
-
-    const getExercises = () => {
-      setIsLoading(true)
-      axios({
-        method: "POST",
-        url: `${process.env.REACT_APP_API_URL}/exercises/list`,
-        data: { blockIds: [Number(id)] },
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: token,
-        },
-      })
-        .then((response) => {
-          setExercises(response.data)
-        })
-        .catch((e) => {
-          setOpen(true)
-          setType("error")
-          setMsg("Server exercises fetch error")
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    }
   }, [id, token, setMsg, setType, setOpen])
 
   const handleEdit = (lang) => {
@@ -221,7 +200,7 @@ const Block = () => {
   }
 
   const handleChooseExercise = () => {
-    setDraftBlock({ ...block, exercises })
+    setDraftBlock(block)
     navigate("/exercises")
   }
 
@@ -272,7 +251,7 @@ const Block = () => {
                 </div>
 
                 {(block.totalDuration * 60) / (block.onTime + block.relaxTime) >
-                  exercises.length && (
+                  block.exercises?.length && (
                   <div>
                     <p>Please, add some exercise.</p>
                     <Button onClick={handleChooseExercise}>
@@ -281,8 +260,8 @@ const Block = () => {
                   </div>
                 )}
 
-                {exercises.length !== 0 && (
-                  <ExercisesList list={exercises} countable />
+                {block.exercises?.length !== 0 && (
+                  <ExercisesList list={block.exercises} countable />
                 )}
               </div>
             )}

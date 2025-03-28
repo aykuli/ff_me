@@ -27,8 +27,6 @@ const App = () => {
   }, [draftBlock])
 
   const addBlockExercise = (exercise) => {
-    mutateExerciseInBlock(exercise, "add")
-
     setDraftBlock((prev) => {
       return {
         ...prev,
@@ -40,8 +38,6 @@ const App = () => {
   }
 
   const deleteBlockExercise = (exercise) => {
-    mutateExerciseInBlock(exercise, "remove")
-
     setDraftBlock((prev) => {
       let exercises = []
       if (prev.exercises?.length) {
@@ -69,10 +65,16 @@ const App = () => {
       .then((response) => {
         setSbType("success")
         setSbMsg(`exercise was succesffully ${action}ed to the block`)
+
+        if (action === "add") {
+          addBlockExercise(exercise)
+        } else {
+          deleteBlockExercise(exercise)
+        }
       })
       .catch((e) => {
         setSbType("error")
-        setSbMsg("Server exercises fetch error")
+        setSbMsg(e.response.data)
       })
       .finally(() => {
         setOpenSb(true)
@@ -133,8 +135,8 @@ const App = () => {
           setToken,
           draftBlock,
           setDraftBlock,
-          addBlockExercise,
-          deleteBlockExercise,
+          addBlockExercise: (exer) => mutateExerciseInBlock(exer, "add"),
+          deleteBlockExercise: (exer) => mutateExerciseInBlock(exer, "remove"),
           snackbar: {
             open: openSnackbar,
             setOpen: setOpenSb,
