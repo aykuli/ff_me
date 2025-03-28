@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material"
 import { Typography as JoyTypography } from "@mui/joy"
-import { Delete } from "@mui/icons-material"
+import { Delete, Flaky } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
 import AuthContext from "../context"
@@ -42,6 +42,11 @@ const Block = () => {
 
   const [currIdx, setCurrIdx] = useState(0)
   const [count, setCount] = useState(10)
+
+  const needMoreExercises = block
+    ? (block.totalDuration * 60) / (block.onTime + block.relaxTime) >
+      block.exercises?.length
+    : true
 
   async function startExerciseRoutine() {
     if (!block.exercises?.length) {
@@ -204,6 +209,26 @@ const Block = () => {
     navigate("/exercises")
   }
 
+  const toggleDraft = () => {
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/blocks/${id}/toggle_draft`,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        setBlock(response.data)
+      })
+      .catch((e) => {
+        setOpen(true)
+        setType("error")
+        setMsg(`fetch error: ${e}`)
+      })
+  }
+
   return (
     <>
       {token === null ? (
@@ -216,6 +241,20 @@ const Block = () => {
             {block && (
               <div>
                 <div style={{ display: "flex", justifyContent: "end" }}>
+                  {!needMoreExercises ? (
+                    <IconButton
+                      color={
+                        block.draft && !needMoreExercises
+                          ? "success"
+                          : undefined
+                      }
+                      size="small"
+                      onClick={toggleDraft}
+                      title="toggle draft"
+                    >
+                      <Flaky />
+                    </IconButton>
+                  ) : null}
                   <IconButton size="small" onClick={handleDel}>
                     <Delete />
                   </IconButton>
@@ -250,8 +289,7 @@ const Block = () => {
                   <Typography variant="h5">Exercises</Typography>
                 </div>
 
-                {(block.totalDuration * 60) / (block.onTime + block.relaxTime) >
-                  block.exercises?.length && (
+                {needMoreExercises && (
                   <div>
                     <p>Please, add some exercise.</p>
                     <Button onClick={handleChooseExercise}>

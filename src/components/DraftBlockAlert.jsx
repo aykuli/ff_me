@@ -8,13 +8,26 @@ import {
 } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 
-const DraftBlockAlert = ({ block, deleteBlockExercise }) => {
+const DraftBlockAlert = ({ block, deleteBlockExercise, setBlock }) => {
   const exercisesCount =
     (block.totalDuration * 60) / (block.onTime + block.relaxTime)
   const navigate = useNavigate()
 
   return (
-    <Alert variant="outlined" severity="warning">
+    <Alert
+      variant="outlined"
+      severity="info"
+      action={
+        <IconButton
+          aria-label="close"
+          color="inherit"
+          size="small"
+          onClick={() => setBlock(null)}
+        >
+          <Close fontSize="inherit" />
+        </IconButton>
+      }
+    >
       <AlertTitle>{`${block.exercises?.length} of ${exercisesCount} exercises chosen`}</AlertTitle>
       You are currently choosing exercises for{" "}
       <Button
@@ -38,7 +51,10 @@ const DraftBlockAlert = ({ block, deleteBlockExercise }) => {
               alignItems: "center",
               marginTop: idx === 0 ? 20 : 10,
               paddingBottom: 5,
-              borderBottom: "1px solid grey",
+              borderBottom:
+                idx === block.exercises.length - 1
+                  ? undefined
+                  : "1px solid grey",
             }}
           >
             <div style={{ width: 30 }}>{e.id}</div>
