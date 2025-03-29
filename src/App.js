@@ -18,15 +18,6 @@ const App = () => {
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  // useEffect(() => {
-  //   if (draftBlock) {
-  //     localStorage.setItem(
-  //       process.env.REACT_APP_DRAFT_ID_LS_NAME,
-  //       draftBlock.id
-  //     )
-  //   }
-  // }, [draftBlock])
-
   const addBlockExercise = (exercise) => {
     setDraftBlock((prev) => {
       return {
@@ -93,24 +84,22 @@ const App = () => {
     setDraftBlock(block)
   }
 
-  const addWorkoutBlock = (exercise) => {
-    setDraftBlock((prev) => {
+  const addWorkoutBlock = (block) => {
+    setDraftWorkout((prev) => {
       return {
         ...prev,
-        exercises: prev.exercises?.length
-          ? [...prev.exercises, exercise]
-          : [exercise],
+        blocks: prev.blocks?.length ? [...prev.blocks, block] : [block],
       }
     })
   }
 
-  const removeWorkoutBlock = (exercise) => {
+  const removeWorkoutBlock = (block) => {
     setDraftBlock((prev) => {
-      let exercises = []
-      if (prev.exercises?.length) {
-        exercises = prev.exercises.filter((e) => e.id !== exercise.id)
+      let blocks = []
+      if (prev.blocks?.length) {
+        blocks = prev.blocks.filter((e) => e.id !== block.id)
       }
-      return { ...prev, exercises }
+      return { ...prev, blocks }
     })
   }
 
@@ -122,7 +111,6 @@ const App = () => {
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}/trainings/${draftWorkout.id}/${action}/block/${block.id}`,
-      data: buildRequest(draftBlock),
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

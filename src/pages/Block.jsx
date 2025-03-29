@@ -28,7 +28,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const Block = () => {
   let { id } = useParams()
-  const { token, snackbar, setDraftBlock } = useContext(AuthContext)
+  const { token, snackbar, setDraftBlock, draftWorkout, addWorkoutBlock } =
+    useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
   const navigate = useNavigate()
 
@@ -229,6 +230,11 @@ const Block = () => {
       })
   }
 
+  const handleAddToWorkout = () => {
+    addWorkoutBlock(block)
+    navigate("/blocks")
+  }
+
   return (
     <>
       {token === null ? (
@@ -241,6 +247,21 @@ const Block = () => {
             {block && (
               <div>
                 <div style={{ display: "flex", justifyContent: "end" }}>
+                  {draftWorkout && !needMoreExercises ? (
+                    <Button
+                      color={
+                        block.draft && !needMoreExercises
+                          ? "success"
+                          : undefined
+                      }
+                      size="small"
+                      onClick={handleAddToWorkout}
+                      title="add block to draft workout"
+                    >
+                      Add to workout
+                    </Button>
+                  ) : null}
+
                   {!needMoreExercises ? (
                     <IconButton
                       color={

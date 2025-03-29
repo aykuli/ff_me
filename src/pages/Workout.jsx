@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react"
 import { useParams } from "react-router"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 import { Typography as JoyTypography } from "@mui/joy"
@@ -27,11 +28,13 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const Workout = () => {
   let { id } = useParams()
-  const { token, snackbar } = useContext(AuthContext)
+  const { token, snackbar, setDraftWorkout } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
+  const navigate = useNavigate()
 
   const [workout, setWorkout] = useState(null)
   const [exercises, setExercises] = useState(null)
+  const [totalDur, setTotalDur] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
@@ -59,12 +62,17 @@ const Workout = () => {
       },
     })
       .then((response) => {
-        setWorkout(response.data)
-        let exercises = []
-        response.data?.blocks?.forEach((b) => {
-          exercises = [...exercises, b]
-        })
-        if (response.data.blocks.length) {
+        const workout = response.data
+        setWorkout(workout)
+        if (workout.blocks?.length) {
+          let exercises = []
+          let td = 0
+          workout.blocks?.forEach((b) => {
+            td += b.totalDuration
+            exercises = [...exercises, b]
+          })
+
+          setTotalDur(td)
           setCurrBlock(response.data.blocks[0])
           setExercises(exercises)
         }
@@ -227,6 +235,11 @@ const Workout = () => {
       })
   }
 
+  const handleAddBlock = () => {
+    setDraftWorkout(workout)
+    navigate("/blocks")
+  }
+
   return (
     <>
       {token === null || !workout ? (
@@ -243,18 +256,32 @@ const Workout = () => {
             {isLoading && <CircularProgress size="3rem" />}
             {workout && (
               <div>
-                <div style={{ display: "flex", justifyContent: "end" }}>
-                  <IconButton
-                    color={workout.draft ? "success" : undefined}
-                    size="small"
-                    onClick={toggleDraft}
-                    title="toggle draft"
-                  >
-                    <Flaky />
-                  </IconButton>
-                  <IconButton size="small" onClick={handleDel}>
-                    <Delete />
-                  </IconButton>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "rgb(110, 220, 120)",
+                      padding: "5px 10px",
+                    }}
+                  >{`Total duration ${totalDur} minutes`}</div>
+                  <div>
+                    <IconButton
+                      color={workout.draft ? "success" : undefined}
+                      size="small"
+                      onClick={toggleDraft}
+                      title="toggle draft"
+                    >
+                      <Flaky />
+                    </IconButton>
+                    <IconButton size="small" onClick={handleDel}>
+                      <Delete />
+                    </IconButton>
+                  </div>
                 </div>
                 <CustomLabel
                   lang="en"
@@ -281,8 +308,18 @@ const Workout = () => {
                     }}
                   />
                 )}
-                <div style={{ marginTop: 20, marginBottom: 10 }}>
+                <div
+                  style={{
+                    marginTop: 20,
+                    marginBottom: 10,
+                    display: "flex",
+                    gap: 10,
+                  }}
+                >
                   <Typography variant="h5">Blocks</Typography>
+                  {workout.draft && (
+                    <Button onClick={handleAddBlock}>Add more blocks</Button>
+                  )}
                 </div>
 
                 {!workout.blocks?.length && (
@@ -295,7 +332,7 @@ const Workout = () => {
                 )}
 
                 {workout.blocks?.length !== 0 && (
-                  <BlocksList blocks={workout.blocks} countable />
+                  <BlocksList blocks={workout.blocks} />
                 )}
               </div>
             )}

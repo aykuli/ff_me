@@ -17,6 +17,7 @@ import { Logout, OtherHouses } from "@mui/icons-material"
 import { menuRoutes } from "../routes"
 import AuthContext from "../context"
 import DraftBlockAlert from "./DraftBlockAlert"
+import DraftWorkoutAlert from "./DraftWorkoutAlert"
 
 const Header = ({ children }) => {
   const {
@@ -24,6 +25,9 @@ const Header = ({ children }) => {
     setToken,
     draftBlock,
     setDraftBlock,
+    draftWorkout,
+    setDraftWorkout,
+    deleteWorkoutBlock,
     snackbar,
     deleteBlockExercise,
   } = useContext(AuthContext)
@@ -107,6 +111,19 @@ const Header = ({ children }) => {
           </div>
         )}
         <Divider style={{ marginBottom: "3vh" }} />
+        {draftWorkout && (
+          <>
+            <DraftWorkoutAlert
+              {...{
+                workout: draftWorkout,
+                setDraftWorkout,
+                deleteWorkoutBlock,
+              }}
+            />
+            <Divider style={{ marginBottom: "3vh" }} />
+          </>
+        )}
+
         {draftBlock && (
           <>
             <DraftBlockAlert
