@@ -12,23 +12,13 @@ import { buildRequest } from "./helpers/block_helpers"
 const App = () => {
   const [token, setToken] = useState(null)
   const [draftBlock, setDraftBlock] = useState(null)
+  const [draftWorkout, setDraftWorkout] = useState(null)
 
   const [openSnackbar, setOpenSb] = useState(false)
   const [sbMsg, setSbMsg] = useState("")
   const [sbType, setSbType] = useState("success")
 
-  useEffect(() => {
-    if (draftBlock) {
-      localStorage.setItem(
-        process.env.REACT_APP_DRAFT_ID_LS_NAME,
-        draftBlock.id
-      )
-    }
-  }, [draftBlock])
-
   const addBlockExercise = (exercise) => {
-    mutateExerciseInBlock(exercise, "add")
-
     setDraftBlock((prev) => {
       return {
         ...prev,
@@ -39,9 +29,7 @@ const App = () => {
     })
   }
 
-  const deleteBlockExercise = (exercise) => {
-    mutateExerciseInBlock(exercise, "remove")
-
+  const removeBlockExercise = (exercise) => {
     setDraftBlock((prev) => {
       let exercises = []
       if (prev.exercises?.length) {
@@ -69,14 +57,96 @@ const App = () => {
       .then((response) => {
         setSbType("success")
         setSbMsg(`exercise was succesffully ${action}ed to the block`)
+
+        if (action === "add") {
+          addBlockExercise(exercise)
+        } else {
+          removeBlockExercise(exercise)
+        }
       })
       .catch((e) => {
         setSbType("error")
-        setSbMsg("Server exercises fetch error")
+        setSbMsg(e.response.data)
       })
       .finally(() => {
         setOpenSb(true)
       })
+  }
+
+  const mutateDraftBlock = (block) => {
+    if (!block) {
+      setDraftBlock(null)
+      localStorage.clear(process.env.REACT_APP_DRAFT_ID_LS_NAME)
+      return
+    }
+
+    localStorage.setItem(process.env.REACT_APP_DRAFT_ID_LS_NAME, block.id)
+    setDraftBlock(block)
+  }
+
+  const addWorkoutBlock = (block) => {
+    setDraftWorkout((prev) => {
+      return {
+        ...prev,
+        blocks: prev.blocks?.length ? [...prev.blocks, block] : [block],
+      }
+    })
+  }
+
+  const removeWorkoutBlock = (block) => {
+    setDraftBlock((prev) => {
+      let blocks = []
+      if (prev.blocks?.length) {
+        blocks = prev.blocks.filter((e) => e.id !== block.id)
+      }
+      return { ...prev, blocks }
+    })
+  }
+
+  const mutateBlockInWorkout = (block, action) => {
+    if (!draftWorkout) {
+      return
+    }
+
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}/trainings/${draftWorkout.id}/${action}/block/${block.id}`,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        setSbType("success")
+        setSbMsg(
+          `Block with id=${block.id} was succesffully ${action}ed to the workout`
+        )
+
+        if (action === "add") {
+          addWorkoutBlock(block)
+        } else {
+          removeWorkoutBlock(block)
+        }
+      })
+      .catch((e) => {
+        setSbType("error")
+        setSbMsg(e.response.data)
+      })
+      .finally(() => {
+        setOpenSb(true)
+      })
+  }
+
+  const mutateDraftWorkout = (workout) => {
+    if (!workout) {
+      setDraftWorkout(null)
+      localStorage.clear(process.env.REACT_APP_WORKOUT_ID_LS_NAME)
+      return
+    }
+
+    localStorage.setItem(process.env.REACT_APP_WORKOUT_ID_LS_NAME, workout.id)
+    setDraftWorkout(workout)
   }
 
   const fetchDraft = useCallback(
@@ -132,9 +202,13 @@ const App = () => {
           token,
           setToken,
           draftBlock,
-          setDraftBlock,
-          addBlockExercise,
-          deleteBlockExercise,
+          setDraftBlock: mutateDraftBlock,
+          addBlockExercise: (exer) => mutateExerciseInBlock(exer, "add"),
+          deleteBlockExercise: (exer) => mutateExerciseInBlock(exer, "remove"),
+          draftWorkout,
+          setDraftWorkout: mutateDraftWorkout,
+          addWorkoutBlock: (block) => mutateBlockInWorkout(block, "add"),
+          deleteWorkoutBlock: (block) => mutateBlockInWorkout(block, "remove"),
           snackbar: {
             open: openSnackbar,
             setOpen: setOpenSb,

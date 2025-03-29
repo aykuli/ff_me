@@ -5,7 +5,7 @@ const BlockLabelSquares = ({
   onTime,
   relaxTime,
   draft,
-  exercisesIds,
+  exercises,
 }) => {
   const exercisesCount = (totalDuration * 60) / (onTime + relaxTime)
 
@@ -20,6 +20,7 @@ const BlockLabelSquares = ({
         }}
       >
         <Typography level="title-md">{totalDuration}</Typography>
+        <Typography level="body-sm">munites</Typography>
         <Typography level="body-sm">duration</Typography>
       </div>
       <div
@@ -31,6 +32,7 @@ const BlockLabelSquares = ({
         }}
       >
         <Typography level="title-md">{onTime}</Typography>
+        <Typography level="body-sm">seconds</Typography>
         <Typography level="body-sm">ON</Typography>
       </div>
       <div
@@ -43,35 +45,25 @@ const BlockLabelSquares = ({
         level="title-sm"
       >
         <Typography level="title-md">{relaxTime}</Typography>
+        <Typography level="body-sm">seconds</Typography>
         <Typography level="body-sm">RELAX</Typography>
       </div>
-      {draft ? (
-        <div
-          style={{
-            backgroundColor: "rgb(213, 220, 110)",
-            padding: "5px",
-            width: 60,
-            textAlign: "center",
-          }}
-        >
-          <Typography level="title-md">{exercisesIds?.length || 0}</Typography>
+      <div
+        style={{
+          backgroundColor: "rgb(213, 220, 110)",
+          padding: "5px",
+          width: 70,
+          textAlign: "center",
+        }}
+      >
+        <Typography level="title-md">
+          {draft ? exercises?.length || 0 : exercisesCount}
+        </Typography>
+        <Typography level="body-sm">exercises</Typography>
+        {draft && (
           <Typography level="body-sm">{`of ${exercisesCount}`}</Typography>
-        </div>
-      ) : (
-        <div
-          style={{
-            backgroundColor: "rgb(213, 220, 110)",
-            padding: "5px",
-            width: 70,
-            textAlign: "center",
-          }}
-        >
-          <Typography level="title-md">
-            {exercisesIds?.length || exercisesCount}
-          </Typography>
-          <Typography level="body-sm">exercises</Typography>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

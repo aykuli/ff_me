@@ -17,10 +17,20 @@ import { Logout, OtherHouses } from "@mui/icons-material"
 import { menuRoutes } from "../routes"
 import AuthContext from "../context"
 import DraftBlockAlert from "./DraftBlockAlert"
+import DraftWorkoutAlert from "./DraftWorkoutAlert"
 
 const Header = ({ children }) => {
-  const { token, setToken, draftBlock, snackbar, deleteBlockExercise } =
-    useContext(AuthContext)
+  const {
+    token,
+    setToken,
+    draftBlock,
+    setDraftBlock,
+    draftWorkout,
+    setDraftWorkout,
+    deleteWorkoutBlock,
+    snackbar,
+    deleteBlockExercise,
+  } = useContext(AuthContext)
   const { open, setOpen, msg, setMsg, type } = snackbar
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -42,11 +52,17 @@ const Header = ({ children }) => {
         "Access-Control-Allow-Origin": "*",
         Authorization: token,
       },
-    }).finally(() => {
-      localStorage.clear(process.env.REACT_APP_TOKEN_LS_NAME)
-      setToken(null)
-      navigate("/login")
     })
+      .catch((e) => {
+        if (e.response.status === 403) {
+          navigate("/login")
+        }
+      })
+      .finally(() => {
+        localStorage.clear(process.env.REACT_APP_TOKEN_LS_NAME)
+        setToken(null)
+        navigate("/login")
+      })
   }
 
   const handleCloseSb = () => {
@@ -95,11 +111,25 @@ const Header = ({ children }) => {
           </div>
         )}
         <Divider style={{ marginBottom: "3vh" }} />
+        {draftWorkout && (
+          <>
+            <DraftWorkoutAlert
+              {...{
+                workout: draftWorkout,
+                setDraftWorkout,
+                deleteWorkoutBlock,
+              }}
+            />
+            <Divider style={{ marginBottom: "3vh" }} />
+          </>
+        )}
+
         {draftBlock && (
           <>
             <DraftBlockAlert
               block={draftBlock}
               deleteBlockExercise={deleteBlockExercise}
+              setBlock={setDraftBlock}
             />
             <Divider style={{ marginBottom: "3vh" }} />
           </>

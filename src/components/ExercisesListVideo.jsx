@@ -2,13 +2,21 @@ import { Box, Button } from "@mui/material"
 import { Typography } from "@mui/joy"
 import Video from "./Video"
 
-const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
+const ListVideo = ({
+  currTxt,
+  nextTxt,
+  currExercise,
+  currIdx,
+  nextExercise,
+  count,
+  onPlay,
+}) => {
   return (
     <Box sx={{ mt: 3 }}>
       <Button variant="contained" onClick={onPlay}>
         Play
       </Button>
-      <Typography level="h2">Current exercise</Typography>
+      <Typography level="h2">{`Current: ${currTxt}`}</Typography>
       {currExercise && (
         <div style={{ position: "relative" }}>
           <Video
@@ -33,7 +41,7 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
               }}
             >
               {`${currExercise.relax ? "" : currIdx + 1} ${
-                currExercise.titleEn
+                currExercise.titleRu
               }`}
             </p>
             <span
@@ -68,7 +76,7 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
           </div>
         </div>
       )}
-      <Typography level="h2">Next exercise</Typography>
+      <Typography level="h2">{`Next: ${nextTxt}`}</Typography>
       {nextExercise && (
         <div style={{ position: "relative" }}>
           <Video
@@ -92,7 +100,7 @@ const ListVideo = ({ currExercise, currIdx, nextExercise, count, onPlay }) => {
                 margin: 0,
               }}
             >
-              {`${currIdx + 2} ${nextExercise.titleEn}`}
+              {`${currIdx + 2} ${nextExercise.titleRu}`}
             </p>
           </div>
         </div>

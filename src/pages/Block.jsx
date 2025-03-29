@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material"
 import { Typography as JoyTypography } from "@mui/joy"
-import { Delete } from "@mui/icons-material"
+import { Delete, Flaky } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
 import AuthContext from "../context"
@@ -28,26 +28,39 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const Block = () => {
   let { id } = useParams()
-  const { token, snackbar, setDraftBlock } = useContext(AuthContext)
+  const { token, snackbar, setDraftBlock, draftWorkout, addWorkoutBlock } =
+    useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
   const navigate = useNavigate()
 
   const [block, setBlock] = useState(null)
-  const [exercises, setExercises] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-
+  const [currTxt, setCurrTxt] = useState("")
+  const [nextTxt, setNextTxt] = useState("")
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
 
   const [currIdx, setCurrIdx] = useState(0)
   const [count, setCount] = useState(10)
 
+  const needMoreExercises = block
+    ? (block.totalDuration * 60) / (block.onTime + block.relaxTime) >
+      block.exercises?.length
+    : true
+
   async function startExerciseRoutine() {
+    if (!block.exercises?.length) {
+      return
+    }
+
     setCurrExercise(relaxExercise)
-    setNextExercise(exercises[0])
+    setNextExercise(block.exercises[0])
+    setCurrTxt("relax")
+    setNextTxt(block.exercises[0].titleRu)
+
     let c = 0
     while (c < 10) {
       await sleep(1000)
@@ -55,11 +68,19 @@ const Block = () => {
       c++
     }
 
-    for (let i = 0; i < exercises.length; i++) {
+    for (let i = 0; i < block.exercises.length; i++) {
       setCurrIdx(i)
-      setCurrExercise(exercises[i])
+      setCurrTxt(block.exercises[i].titleRu)
+      setCurrExercise(block.exercises[i])
       setCount(block?.onTime)
-      setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
+      setNextExercise(
+        i + 1 < block.exercises.length ? block.exercises[i + 1] : null
+      )
+      setNextTxt(
+        i + 1 < block.exercises.length
+          ? block.exercises[i + 1].titleRu
+          : "finish"
+      )
 
       c = 0
       while (c < block?.onTime) {
@@ -68,15 +89,22 @@ const Block = () => {
         c++
       }
 
-      if (i + 1 > exercises.length) {
+      if (i + 1 > block.exercises.length) {
         // finish
         c = 0
         while (c < 10) {
+          setCurrTxt("finish")
+          setCurrExercise(relaxExercise)
+
           await sleep(1000)
           setCount((prev) => prev - 1)
           c++
         }
+        setCurrExercise(null)
+        setNextExercise(null)
       } else {
+        setCurrTxt("relax")
+
         setCurrExercise(relaxExercise)
         setCount(block?.relaxTime)
 
@@ -114,33 +142,8 @@ const Block = () => {
         setMsg("Server exercises fetch error")
       })
       .finally(() => {
-        getExercises()
+        setIsLoading(false)
       })
-
-    const getExercises = () => {
-      setIsLoading(true)
-      axios({
-        method: "POST",
-        url: `${process.env.REACT_APP_API_URL}/exercises/list`,
-        data: { blockIds: [Number(id)] },
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: token,
-        },
-      })
-        .then((response) => {
-          setExercises(response.data)
-        })
-        .catch((e) => {
-          setOpen(true)
-          setType("error")
-          setMsg("Server exercises fetch error")
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    }
   }, [id, token, setMsg, setType, setOpen])
 
   const handleEdit = (lang) => {
@@ -221,8 +224,33 @@ const Block = () => {
   }
 
   const handleChooseExercise = () => {
-    setDraftBlock({ ...block, exercises })
+    setDraftBlock(block)
     navigate("/exercises")
+  }
+
+  const toggleDraft = () => {
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/blocks/${id}/toggle_draft`,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        setBlock(response.data)
+      })
+      .catch((e) => {
+        setOpen(true)
+        setType("error")
+        setMsg(`fetch error: ${e}`)
+      })
+  }
+
+  const handleAddToWorkout = () => {
+    addWorkoutBlock(block)
+    navigate("/blocks")
   }
 
   return (
@@ -237,6 +265,35 @@ const Block = () => {
             {block && (
               <div>
                 <div style={{ display: "flex", justifyContent: "end" }}>
+                  {draftWorkout && !needMoreExercises ? (
+                    <Button
+                      color={
+                        block.draft && !needMoreExercises
+                          ? "success"
+                          : undefined
+                      }
+                      size="small"
+                      onClick={handleAddToWorkout}
+                      title="add block to draft workout"
+                    >
+                      Add to workout
+                    </Button>
+                  ) : null}
+
+                  {!needMoreExercises ? (
+                    <IconButton
+                      color={
+                        block.draft && !needMoreExercises
+                          ? "success"
+                          : undefined
+                      }
+                      size="small"
+                      onClick={toggleDraft}
+                      title="toggle draft"
+                    >
+                      <Flaky />
+                    </IconButton>
+                  ) : null}
                   <IconButton size="small" onClick={handleDel}>
                     <Delete />
                   </IconButton>
@@ -259,6 +316,8 @@ const Block = () => {
                 {block.draft ? null : (
                   <ListVideo
                     {...{
+                      currTxt,
+                      nextTxt,
                       currExercise,
                       currIdx,
                       nextExercise,
@@ -271,8 +330,7 @@ const Block = () => {
                   <Typography variant="h5">Exercises</Typography>
                 </div>
 
-                {(block.totalDuration * 60) / (block.onTime + block.relaxTime) >
-                  exercises.length && (
+                {needMoreExercises && (
                   <div>
                     <p>Please, add some exercise.</p>
                     <Button onClick={handleChooseExercise}>
@@ -281,8 +339,8 @@ const Block = () => {
                   </div>
                 )}
 
-                {exercises.length !== 0 && (
-                  <ExercisesList list={exercises} countable />
+                {block.exercises?.length !== 0 && (
+                  <ExercisesList list={block.exercises} countable />
                 )}
               </div>
             )}

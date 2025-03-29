@@ -23,9 +23,9 @@ const BlocksList = ({ blocks }) => {
   return (
     <>
       {blocks?.length &&
-        blocks.map((block) => {
+        blocks.map((block, idx) => {
           return (
-            <SimpleTreeView key={block.id}>
+            <SimpleTreeView key={`${block.id}-${idx}`}>
               <TreeItem
                 itemId={`block-${block.id}`}
                 label={<BlockLabel {...block} />}
@@ -44,7 +44,7 @@ const BlocksList = ({ blocks }) => {
                           <TreeItem
                             key={`${block.id}-${exr.id}-${index}`}
                             itemId={`${block.id}-${exr.id}-${index}`}
-                            label={`|-- ${exr.titleEn}`}
+                            label={`|-- ${exr.titleRu}`}
                           />
                           <Divider />
                         </>
