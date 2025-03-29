@@ -24,7 +24,14 @@ const relaxExercise = {
   titleEn: "relax",
   titleRu: "отдых",
 }
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const cover = {
+  filename: "files/cover.mp4",
+  titleEn: "cover",
+  titleRu: "заставка",
+}
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 const Workout = () => {
   let { id } = useParams()
@@ -39,9 +46,11 @@ const Workout = () => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
-  const [currBlock, setCurrBlock] = useState(null)
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
+
+  const [currTxt, setCurrTxt] = useState("")
+  const [nextTxt, setNextTxt] = useState("")
 
   const [currIdx, setCurrIdx] = useState(0)
   const [count, setCount] = useState(10)
@@ -73,7 +82,6 @@ const Workout = () => {
           })
 
           setTotalDur(td)
-          setCurrBlock(response.data.blocks[0])
           setExercises(exercises)
         }
       })
@@ -171,47 +179,89 @@ const Workout = () => {
   }
 
   async function startExerciseRoutine() {
-    setCurrExercise(relaxExercise)
-    setNextExercise(exercises[0])
-    let c = 0
-    while (c < 10) {
-      await sleep(1000)
-      setCount((prev) => prev - 1)
-      c++
+    if (!workout?.blocks?.length) {
+      return
     }
 
-    for (let i = 0; i < exercises.length; i++) {
-      setCurrIdx(i)
-      setCurrExercise(exercises[i])
-      setCount(currBlock?.onTime)
-      setNextExercise(i + 1 < exercises.length ? exercises[i + 1] : null)
+    setCurrExercise(cover)
+    setNextExercise(exercises[0])
 
-      c = 0
-      while (c < currBlock?.onTime) {
+    // START
+    setCurrTxt("cover for 2 seconds")
+    setNextTxt("plan show")
+    await sleep(2000)
+    setCurrTxt("plan show for 3 seconds")
+    setNextTxt("block preview for 10 seconds")
+    await sleep(3000)
+
+    for (let b = 0; b < workout.blocks.length; b++) {
+      setCurrExercise(relaxExercise)
+      setCount(10)
+      let c = 0
+      while (c < 10) {
+        setCurrTxt(
+          `${b + 1}th block ${workout.blocks[b].titleRu} preview for 10 seconds`
+        )
+        setNextTxt(workout.blocks[b].exercises[0].titleRu)
         await sleep(1000)
         setCount((prev) => prev - 1)
         c++
       }
 
-      if (i + 1 > exercises.length) {
-        // finish
-        c = 0
-        while (c < 10) {
-          await sleep(1000)
-          setCount((prev) => prev - 1)
-          c++
+      for (let i = 0; i < workout.blocks[b].exercises.length; i++) {
+        setCurrTxt(
+          `${b + 1}th  block: ${workout.blocks[b].titleRu}, ${
+            i + 1
+          }th exercise: ${workout.blocks[b].exercises[i].titleRu}`
+        )
+        let nt = ""
+        if (i < workout.blocks[b].exercises.length - 1) {
+          nt = `${b + 1}th block: ${workout.blocks[b].titleRu}, ${
+            i + 2
+          }th exercise: ${workout.blocks[b].exercises[i + 1].titleRu}`
+        } else {
+          nt = "отдых"
         }
-      } else {
-        setCurrExercise(relaxExercise)
-        setCount(currBlock?.relaxTime)
+
+        setNextTxt(nt)
+        setCurrIdx(i)
+        setCurrExercise(workout.blocks[b].exercises[i])
+        setCount(workout.blocks[b].onTime)
+        setNextExercise(
+          i + 1 < workout.blocks[b].exercises.length
+            ? workout.blocks[b].exercises[i + 1]
+            : null
+        )
 
         c = 0
-        while (c < currBlock?.relaxTime) {
+        while (c < workout.blocks[b].onTime) {
           await sleep(1000)
           setCount((prev) => prev - 1)
           c++
         }
+
+        if (i < workout.blocks[b].exercises.length - 1) {
+          setCurrExercise(relaxExercise)
+          setCount(workout.blocks[b].relaxTime)
+
+          c = 0
+          while (c < workout.blocks[b].relaxTime) {
+            await sleep(1000)
+            setCount((prev) => prev - 1)
+            c++
+          }
+          setCurrExercise(null)
+        }
       }
+    }
+    // finish
+    setCurrExercise(relaxExercise)
+    setNextExercise(null)
+    let c = 0
+    while (c < 10) {
+      await sleep(1000)
+      setCount((prev) => prev - 1)
+      c++
     }
   }
 
@@ -300,6 +350,8 @@ const Workout = () => {
                 {exercises.length && (
                   <ListVideo
                     {...{
+                      currTxt,
+                      nextTxt,
                       currExercise,
                       currIdx,
                       nextExercise,

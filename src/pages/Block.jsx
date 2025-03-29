@@ -38,6 +38,8 @@ const Block = () => {
   const [isEditEn, setIsEditEn] = useState(false)
   const [isEditRu, setIsEditRu] = useState(false)
 
+  const [currTxt, setCurrTxt] = useState("")
+  const [nextTxt, setNextTxt] = useState("")
   const [currExercise, setCurrExercise] = useState(null)
   const [nextExercise, setNextExercise] = useState(null)
 
@@ -56,6 +58,9 @@ const Block = () => {
 
     setCurrExercise(relaxExercise)
     setNextExercise(block.exercises[0])
+    setCurrTxt("relax")
+    setNextTxt(block.exercises[0].titleRu)
+
     let c = 0
     while (c < 10) {
       await sleep(1000)
@@ -65,10 +70,16 @@ const Block = () => {
 
     for (let i = 0; i < block.exercises.length; i++) {
       setCurrIdx(i)
+      setCurrTxt(block.exercises[i].titleRu)
       setCurrExercise(block.exercises[i])
       setCount(block?.onTime)
       setNextExercise(
         i + 1 < block.exercises.length ? block.exercises[i + 1] : null
+      )
+      setNextTxt(
+        i + 1 < block.exercises.length
+          ? block.exercises[i + 1].titleRu
+          : "finish"
       )
 
       c = 0
@@ -82,11 +93,18 @@ const Block = () => {
         // finish
         c = 0
         while (c < 10) {
+          setCurrTxt("finish")
+          setCurrExercise(relaxExercise)
+
           await sleep(1000)
           setCount((prev) => prev - 1)
           c++
         }
+        setCurrExercise(null)
+        setNextExercise(null)
       } else {
+        setCurrTxt("relax")
+
         setCurrExercise(relaxExercise)
         setCount(block?.relaxTime)
 
@@ -298,6 +316,8 @@ const Block = () => {
                 {block.draft ? null : (
                   <ListVideo
                     {...{
+                      currTxt,
+                      nextTxt,
                       currExercise,
                       currIdx,
                       nextExercise,
