@@ -20,12 +20,12 @@ import ListVideo from "../components/ExercisesListVideo"
 
 const relaxExercise = {
   relax: true,
-  filename: "files/relax.mp4",
+  filename: "ffiles/relax.mp4",
   titleEn: "relax",
   titleRu: "отдых",
 }
 const cover = {
-  filename: "files/cover.mp4",
+  filename: "ffiles/cover.mp4",
   titleEn: "cover",
   titleRu: "заставка",
 }
@@ -194,7 +194,7 @@ const Workout = () => {
     setNextTxt("block preview for 10 seconds")
     await sleep(3000)
 
-    for (let b = 0; b < workout.blocks.length; b++) {
+    for (let b = 0; b < workout.blocks?.length; b++) {
       setCurrExercise(relaxExercise)
       setCount(10)
       let c = 0
@@ -208,14 +208,14 @@ const Workout = () => {
         c++
       }
 
-      for (let i = 0; i < workout.blocks[b].exercises.length; i++) {
+      for (let i = 0; i < workout.blocks[b]?.exercises?.length; i++) {
         setCurrTxt(
           `${b + 1}th  block: ${workout.blocks[b].titleRu}, ${
             i + 1
           }th exercise: ${workout.blocks[b].exercises[i].titleRu}`
         )
         let nt = ""
-        if (i < workout.blocks[b].exercises.length - 1) {
+        if (i < workout.blocks[b]?.exercises?.length - 1) {
           nt = `${b + 1}th block: ${workout.blocks[b].titleRu}, ${
             i + 2
           }th exercise: ${workout.blocks[b].exercises[i + 1].titleRu}`
@@ -228,7 +228,7 @@ const Workout = () => {
         setCurrExercise(workout.blocks[b].exercises[i])
         setCount(workout.blocks[b].onTime)
         setNextExercise(
-          i + 1 < workout.blocks[b].exercises.length
+          i + 1 < workout.blocks[b]?.exercises?.length
             ? workout.blocks[b].exercises[i + 1]
             : null
         )
@@ -240,7 +240,7 @@ const Workout = () => {
           c++
         }
 
-        if (i < workout.blocks[b].exercises.length - 1) {
+        if (i < workout.blocks[b]?.exercises?.length - 1) {
           setCurrExercise(relaxExercise)
           setCount(workout.blocks[b].relaxTime)
 
@@ -347,19 +347,17 @@ const Workout = () => {
                   onEdit={() => handleEdit("ru")}
                   onSave={(v) => handleSave("ru", v)}
                 />
-                {exercises.length && (
-                  <ListVideo
-                    {...{
-                      currTxt,
-                      nextTxt,
-                      currExercise,
-                      currIdx,
-                      nextExercise,
-                      count,
-                      onPlay: startExerciseRoutine,
-                    }}
-                  />
-                )}
+                <ListVideo
+                  {...{
+                    currTxt,
+                    nextTxt,
+                    currExercise,
+                    currIdx,
+                    nextExercise,
+                    count,
+                    onPlay: startExerciseRoutine,
+                  }}
+                />
                 <div
                   style={{
                     marginTop: 20,
