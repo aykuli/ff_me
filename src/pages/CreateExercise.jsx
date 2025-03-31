@@ -45,6 +45,7 @@ const CreateExercise = () => {
 
   const handleSave = () => {
     setIsUploading(true)
+    setSaveBtnDisabled(true)
     const data = new FormData()
     data.append("file", file)
     data.append("titleEn", titleEn)
@@ -73,8 +74,10 @@ const CreateExercise = () => {
       })
       .finally(() => {
         setOpen(true)
-        setSaveBtnDisabled(true)
         setIsUploading(false)
+        setTitleEn("")
+        setTitleRu("")
+        setFile(undefined)
       })
   }
 

@@ -6,7 +6,6 @@ const buildRequest = (body) => {
     onTime: body.onTime,
     relaxTime: body.relaxTime,
     draft: body.draft,
-    exercisesIds: body.exercisesIds,
   }
 }
 

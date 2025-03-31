@@ -12,7 +12,7 @@ const DraftBlockAlert = ({ block, deleteBlockExercise, setBlock }) => {
   const exercisesCount =
     (block.totalDuration * 60) / (block.onTime + block.relaxTime)
   const navigate = useNavigate()
-
+  console.log(block)
   return (
     <Alert
       variant="outlined"
@@ -28,7 +28,9 @@ const DraftBlockAlert = ({ block, deleteBlockExercise, setBlock }) => {
         </IconButton>
       }
     >
-      <AlertTitle>{`${block.exercises?.length} of ${exercisesCount} exercises chosen`}</AlertTitle>
+      <AlertTitle>{`${
+        block.exercises?.length || 0
+      } of ${exercisesCount} exercises chosen`}</AlertTitle>
       You are currently choosing exercises for{" "}
       <Button
         onClick={() => navigate(`blocks/${block.id}`)}

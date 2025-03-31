@@ -24,7 +24,6 @@ const CreateBlock = () => {
 
   const [isUploading, setIsUploading] = useState(false)
   const [saveBtnDisabled, setSaveBtnDisabled] = useState(true)
-
   const [body, setBody] = useState(initBody)
 
   useEffect(() => {
@@ -48,8 +47,8 @@ const CreateBlock = () => {
         setMsg("Successfully saved")
         setType("success")
 
-        setDraftBlock({ ...body, id: response.data.id })
-        navigate(`/exercises/${response.data.id}`)
+        setDraftBlock({ ...body, id: response.data.id, exercises: [] })
+        navigate(`/blocks/${response.data.id}`)
       })
       .catch((e) => {
         setMsg("Exercise save error: " + e)

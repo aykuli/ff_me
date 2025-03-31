@@ -1,5 +1,4 @@
 const initBody = {
-  id: 0,
   titleEn: "",
   titleRu: "",
   totalDuration: 10, //minutes
@@ -7,15 +6,15 @@ const initBody = {
   relaxTime: 20, // seconds
   draft: true,
   exercisesCount: 10,
-  exercisesIds: [],
+  exercises: [],
 }
 
 const full = ({ titleEn, titleRu, totalDuration, onTime, exercisesCount }) => {
   return (
     titleEn !== "" &&
     titleRu !== "" &&
-    totalDuration > 0 &&
-    onTime > 0 &&
+    totalDuration > 5 &&
+    onTime > 5 &&
     exercisesCount >= 5
   )
 }
