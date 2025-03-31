@@ -15,7 +15,6 @@ const BlocksList = () => {
   const { setOpen, setMsg, setType } = snackbar
 
   const [list, setList] = useState([])
-  const [exercises, setExercises] = useState(new Map())
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {

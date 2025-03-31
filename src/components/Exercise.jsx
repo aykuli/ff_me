@@ -163,11 +163,7 @@ const Item = ({ exercise, onAdd, onDelete, included }) => {
               <div></div>
             )}
 
-            <IconButton
-              edge="end"
-              size="small"
-              onClick={() => onDelete(value.id)}
-            >
+            <IconButton edge="end" size="small" onClick={() => onDelete(value)}>
               <Delete />
             </IconButton>
           </div>

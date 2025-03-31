@@ -12,7 +12,7 @@ const DraftBlockAlert = ({ block, deleteBlockExercise, setBlock }) => {
   const exercisesCount =
     (block.totalDuration * 60) / (block.onTime + block.relaxTime)
   const navigate = useNavigate()
-  console.log(block)
+
   return (
     <Alert
       variant="outlined"
