@@ -13,18 +13,11 @@ import { Typography as JoyTypography } from "@mui/joy"
 import { Delete, Flaky } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
-import AuthContext from "../context"
 import ExercisesList from "../components/ExercisesList"
 import Squares from "../components/BlockLabelSquares"
 import ListVideo from "../components/ExercisesListVideo"
-
-const relaxExercise = {
-  relax: true,
-  filename: "files/relax.mp4",
-  titleEn: "relax",
-  titleRu: "отдых",
-}
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+import AuthContext from "../context"
+import { relaxExercise, sleep } from "../helpers/block_helpers"
 
 const Block = () => {
   let { id } = useParams()
