@@ -47,7 +47,7 @@ const App = () => {
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}/blocks/${draftBlock.id}/${action}/exercise/${exercise.id}`,
-      data: buildRequest(draftBlock),
+      data: { side: exercise.side },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
