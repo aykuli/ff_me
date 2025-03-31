@@ -16,12 +16,12 @@ const ListVideo = ({
 
   return (
     <Box sx={{ mt: 3 }}>
-      <Button variant="contained" onClick={onPlay}>
+      <Button sx={{ mb: 4 }} variant="contained" onClick={onPlay}>
         Play
       </Button>
       <Typography level="h2">{`Current: ${currTxt}`}</Typography>
       {currExercise && (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", maxWidth: 700 }}>
           <Video
             urls={[`${process.env.REACT_APP_CDN_URL}/${currExercise.filename}`]}
           />
@@ -90,7 +90,7 @@ const ListVideo = ({
       )}
       <Typography level="h2">{`Next: ${nextTxt}`}</Typography>
       {nextExercise && (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", maxWidth: 600 }}>
           <Video
             urls={[`${process.env.REACT_APP_CDN_URL}/${nextExercise.filename}`]}
           />
