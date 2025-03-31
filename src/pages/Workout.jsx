@@ -13,25 +13,11 @@ import {
 } from "@mui/material"
 import { Delete, Flaky } from "@mui/icons-material"
 
-import CustomLabel from "../components/CustimTitleLabel"
 import AuthContext from "../context"
+import { relaxExercise, cover, sleep } from "../helpers/block_helpers"
+import CustomLabel from "../components/CustimTitleLabel"
 import BlocksList from "../components/WorkoutBlockList"
 import ListVideo from "../components/ExercisesListVideo"
-
-const relaxExercise = {
-  relax: true,
-  filename: "ffiles/relax.mp4",
-  titleEn: "relax",
-  titleRu: "отдых",
-}
-const cover = {
-  filename: "ffiles/cover.mp4",
-  titleEn: "cover",
-  titleRu: "заставка",
-}
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 const Workout = () => {
   let { id } = useParams()
@@ -195,14 +181,17 @@ const Workout = () => {
     await sleep(3000)
 
     for (let b = 0; b < workout.blocks?.length; b++) {
+      //here I show preview for block
       setCurrExercise(relaxExercise)
+      setNextExercise(workout.blocks[b]?.exercises[0])
+      setNextTxt(workout.blocks[b].exercises[0].titleRu)
+      setCurrTxt(
+        `${b + 1}th block ${workout.blocks[b].titleRu} preview for 10 seconds`
+      )
       setCount(10)
+
       let c = 0
       while (c < 10) {
-        setCurrTxt(
-          `${b + 1}th block ${workout.blocks[b].titleRu} preview for 10 seconds`
-        )
-        setNextTxt(workout.blocks[b].exercises[0].titleRu)
         await sleep(1000)
         setCount((prev) => prev - 1)
         c++
@@ -227,6 +216,7 @@ const Workout = () => {
         setCurrIdx(i)
         setCurrExercise(workout.blocks[b].exercises[i])
         setCount(workout.blocks[b].onTime)
+
         setNextExercise(
           i + 1 < workout.blocks[b]?.exercises?.length
             ? workout.blocks[b].exercises[i + 1]

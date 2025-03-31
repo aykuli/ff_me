@@ -1,42 +1,26 @@
 import { useNavigate } from "react-router-dom"
 import { Typography } from "@mui/joy"
+
 import Squares from "./BlockLabelSquares"
 
-const BlockLabel = ({
-  id,
-  titleEn,
-  titleRu,
-  onTime,
-  relaxTime,
-  totalDuration,
-  exercisesIds,
-  draft,
-  onClick,
-}) => {
+const BlockLabel = ({ block }) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate(`/blocks/${id}`)
+    navigate(`/blocks/${block.id}`)
   }
 
   return (
     <div
       style={{ width: "100%", display: "block", paddingBottom: 10 }}
-      onClick={onClick}
+      // onClick={showExercises}
+      title="show exercises"
     >
-      <div onClick={handleClick}>
-        <Typography level="title-lg">{titleEn}</Typography>
-        <Typography level="body-md">{titleRu}</Typography>
+      <div onClick={handleClick} title="go to page with block">
+        <Typography level="title-lg">{block.titleEn}</Typography>
+        <Typography level="body-md">{block.titleRu}</Typography>
       </div>
-      <Squares
-        {...{
-          totalDuration,
-          onTime,
-          relaxTime,
-          draft,
-          exercisesIds,
-        }}
-      />
+      <Squares {...block} />
     </div>
   )
 }

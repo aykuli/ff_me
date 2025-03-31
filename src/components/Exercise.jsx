@@ -6,13 +6,17 @@ import {
   IconButton,
   Button,
   Divider,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material"
 import { Add, Delete } from "@mui/icons-material"
 import AuthContext from "../context"
 import CustomLabel from "../components/CustimTitleLabel"
 
-const Item = ({ exercise, onAdd, included }) => {
-  const { token, snackbar } = useContext(AuthContext)
+const Item = ({ exercise, onAdd, onDelete, included }) => {
+  const { token, snackbar, draftBlock } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
 
   const [value, setV] = useState(exercise)
@@ -22,8 +26,6 @@ const Item = ({ exercise, onAdd, included }) => {
 
   const url = `${process.env.REACT_APP_CDN_URL}/${exercise.filename}`
 
-  const src = `${process.env.REACT_APP_API_URL}/exercises`
-
   const save = () => {
     if (!token) {
       return
@@ -32,7 +34,7 @@ const Item = ({ exercise, onAdd, included }) => {
     setIsLoading(true)
     axios({
       method: "POST",
-      url: `${src}/${value.id}`,
+      url: `${process.env.REACT_APP_API_URL}/exercises/${value.id}`,
       data: {
         titleEn: value.titleEn,
         titleRu: value.titleRu,
@@ -78,29 +80,6 @@ const Item = ({ exercise, onAdd, included }) => {
     save()
   }
 
-  const handleDel = () => {
-    axios({
-      method: "DELETE",
-      url: `${src}/${value.id}`,
-      headers: {
-        "Access-Control-Allow-Origin": "*", // todo change
-        Authorization: token,
-      },
-    })
-      .then((response) => {
-        setMsg("Successfully deleted")
-        setType("success")
-      })
-      .catch((e) => {
-        setMsg("Exercise save error: " + e)
-        setType("error")
-      })
-      .finally(() => {
-        setIsLoading(false)
-        window.location.reload()
-      })
-  }
-
   return (
     <Box
       sx={{
@@ -138,19 +117,53 @@ const Item = ({ exercise, onAdd, included }) => {
               marginBottom: "10px",
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "end",
             }}
           >
-            <Button
-              variant="contained"
-              edge="end"
-              size="small"
-              onClick={() => onAdd(value)}
-              color={included ? "secondary" : "primary"}
-            >
-              <Add />
-            </Button>
+            {draftBlock ? (
+              <>
+                <Button
+                  variant="contained"
+                  edge="end"
+                  size="small"
+                  onClick={() => onAdd(value)}
+                  color={included ? "secondary" : "primary"}
+                  title="Add exercise to the draft block"
+                >
+                  <Add />
+                </Button>
 
-            <IconButton edge="end" size="small" onClick={handleDel}>
+                <FormControl variant="standard" sx={{ width: 200 }}>
+                  <InputLabel id="side-label">Side</InputLabel>
+                  <Select
+                    labelId="side-label"
+                    id="side"
+                    value={value.side === "" ? "none" : value.side}
+                    onChange={(e) => {
+                      setV((prev) => {
+                        const v = e.target.value
+                        return { ...prev, side: v === "none" ? "" : v }
+                      })
+                    }}
+                    label="Side"
+                  >
+                    {["none", "rigth", "left", "backward", "forward"].map(
+                      (v) => {
+                        return (
+                          <MenuItem key={v} value={v}>
+                            {v}
+                          </MenuItem>
+                        )
+                      }
+                    )}
+                  </Select>
+                </FormControl>
+              </>
+            ) : (
+              <div></div>
+            )}
+
+            <IconButton edge="end" size="small" onClick={() => onDelete(value)}>
               <Delete />
             </IconButton>
           </div>

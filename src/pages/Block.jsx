@@ -13,23 +13,22 @@ import { Typography as JoyTypography } from "@mui/joy"
 import { Delete, Flaky } from "@mui/icons-material"
 
 import CustomLabel from "../components/CustimTitleLabel"
-import AuthContext from "../context"
 import ExercisesList from "../components/ExercisesList"
 import Squares from "../components/BlockLabelSquares"
 import ListVideo from "../components/ExercisesListVideo"
-
-const relaxExercise = {
-  relax: true,
-  filename: "files/relax.mp4",
-  titleEn: "relax",
-  titleRu: "отдых",
-}
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+import AuthContext from "../context"
+import { relaxExercise, sleep } from "../helpers/block_helpers"
 
 const Block = () => {
   let { id } = useParams()
-  const { token, snackbar, setDraftBlock, draftWorkout, addWorkoutBlock } =
-    useContext(AuthContext)
+  const {
+    token,
+    snackbar,
+    setDraftBlock,
+    draftWorkout,
+    addWorkoutBlock,
+    deleteBlockExercise,
+  } = useContext(AuthContext)
   const { setOpen, setMsg, setType } = snackbar
   const navigate = useNavigate()
 
@@ -45,11 +44,9 @@ const Block = () => {
 
   const [currIdx, setCurrIdx] = useState(0)
   const [count, setCount] = useState(10)
+  const [reload, setReload] = useState(false)
 
-  const needMoreExercises = block
-    ? (block.totalDuration * 60) / (block.onTime + block.relaxTime) >
-      block.exercises?.length
-    : true
+  const [needMoreExercises, setNeedMoreExercises] = useState(false)
 
   async function startExerciseRoutine() {
     if (!block.exercises?.length) {
@@ -134,7 +131,14 @@ const Block = () => {
       },
     })
       .then((response) => {
-        setBlock(response.data)
+        const newB = response.data
+        setBlock(newB)
+        setNeedMoreExercises(
+          newB
+            ? (newB.totalDuration * 60) / (newB.onTime + newB.relaxTime) >
+                newB.exercises?.length
+            : true
+        )
       })
       .catch((e) => {
         setOpen(true)
@@ -144,7 +148,7 @@ const Block = () => {
       .finally(() => {
         setIsLoading(false)
       })
-  }, [id, token, setMsg, setType, setOpen])
+  }, [id, token, setMsg, setType, setOpen, reload])
 
   const handleEdit = (lang) => {
     if (lang === "ru") {
@@ -280,20 +284,16 @@ const Block = () => {
                     </Button>
                   ) : null}
 
-                  {!needMoreExercises ? (
-                    <IconButton
-                      color={
-                        block.draft && !needMoreExercises
-                          ? "success"
-                          : undefined
-                      }
-                      size="small"
-                      onClick={toggleDraft}
-                      title="toggle draft"
-                    >
-                      <Flaky />
-                    </IconButton>
-                  ) : null}
+                  <IconButton
+                    color={
+                      block.draft && !needMoreExercises ? "success" : undefined
+                    }
+                    size="small"
+                    onClick={toggleDraft}
+                    title={`make ${block.draft ? "ready" : "draft"}`}
+                  >
+                    <Flaky />
+                  </IconButton>
                   <IconButton size="small" onClick={handleDel}>
                     <Delete />
                   </IconButton>
@@ -340,7 +340,14 @@ const Block = () => {
                 )}
 
                 {block.exercises?.length !== 0 && (
-                  <ExercisesList list={block.exercises} countable />
+                  <ExercisesList
+                    list={block.exercises}
+                    countable
+                    onDelete={(exercise) => {
+                      deleteBlockExercise(exercise, block)
+                      setReload(true)
+                    }}
+                  />
                 )}
               </div>
             )}

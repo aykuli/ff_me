@@ -1,5 +1,6 @@
-import { Box, Button } from "@mui/material"
+import { Box, Button, useMediaQuery } from "@mui/material"
 import { Typography } from "@mui/joy"
+
 import Video from "./Video"
 
 const ListVideo = ({
@@ -11,14 +12,16 @@ const ListVideo = ({
   count,
   onPlay,
 }) => {
+  const desktop = useMediaQuery("(min-width:600px)")
+
   return (
     <Box sx={{ mt: 3 }}>
-      <Button variant="contained" onClick={onPlay}>
+      <Button sx={{ mb: 4 }} variant="contained" onClick={onPlay}>
         Play
       </Button>
       <Typography level="h2">{`Current: ${currTxt}`}</Typography>
       {currExercise && (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", maxWidth: 700 }}>
           <Video
             urls={[`${process.env.REACT_APP_CDN_URL}/${currExercise.filename}`]}
           />
@@ -31,7 +34,7 @@ const ListVideo = ({
           >
             <p
               style={{
-                fontSize: "2em",
+                fontSize: desktop ? "2em" : "1.5em",
                 fontWeight: 600,
                 color: "#442129",
                 padding: "5px 20px",
@@ -44,33 +47,42 @@ const ListVideo = ({
                 currExercise.titleRu
               }`}
             </p>
-            <span
-              style={{
-                fontSize: "1.5em",
-                fontWeight: 600,
-                color: "#554438",
-                padding: "5px 10px",
-                margin: 0,
-                backgroundColor: "white",
-              }}
-            >
-              {currExercise.side}
-            </span>
+
+            {currExercise.side && currExercise.side !== "" ? (
+              <span
+                style={{
+                  fontSize: desktop ? "1.5em" : "1em",
+                  fontWeight: 600,
+                  color: "#554438",
+                  padding: "5px 10px",
+                  margin: 0,
+                  backgroundColor: "white",
+                }}
+              >
+                {currExercise.side}
+              </span>
+            ) : null}
           </div>
           <div
             style={{
               position: "absolute",
-              top: "30%",
+              top: desktop ? "30%" : "40%",
               margin: 20,
               backgroundColor: "white",
-              width: 120,
-              height: 120,
+              width: desktop ? 120 : 50,
+              height: desktop ? 120 : 50,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <p style={{ fontSize: "4em", fontWeight: 600, color: "#442129" }}>
+            <p
+              style={{
+                fontSize: desktop ? "4em" : "2em",
+                fontWeight: 600,
+                color: "#442129",
+              }}
+            >
               {count}
             </p>
           </div>
@@ -78,7 +90,7 @@ const ListVideo = ({
       )}
       <Typography level="h2">{`Next: ${nextTxt}`}</Typography>
       {nextExercise && (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", maxWidth: 600 }}>
           <Video
             urls={[`${process.env.REACT_APP_CDN_URL}/${nextExercise.filename}`]}
           />

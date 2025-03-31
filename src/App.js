@@ -7,7 +7,6 @@ import "./index.css"
 import routes from "./routes"
 import AuthContext from "./context"
 import ProtectedRoute from "./components/ProtectedRoute"
-import { buildRequest } from "./helpers/block_helpers"
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -39,15 +38,15 @@ const App = () => {
     })
   }
 
-  const mutateExerciseInBlock = (exercise, action) => {
-    if (!draftBlock) {
+  const mutateExerciseInBlock = (exercise, action, block = null) => {
+    if (!draftBlock && !block) {
       return
     }
-
+    const id = block ? block.id : draftBlock.id
     axios({
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}/blocks/${draftBlock.id}/${action}/exercise/${exercise.id}`,
-      data: buildRequest(draftBlock),
+      url: `${process.env.REACT_APP_API_URL}/blocks/${id}/${action}/exercise/${exercise.id}`,
+      data: { side: exercise.side },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -57,11 +56,12 @@ const App = () => {
       .then((response) => {
         setSbType("success")
         setSbMsg(`exercise was succesffully ${action}ed to the block`)
-
-        if (action === "add") {
-          addBlockExercise(exercise)
-        } else {
-          removeBlockExercise(exercise)
+        if (!block) {
+          if (action === "add") {
+            addBlockExercise(exercise)
+          } else {
+            removeBlockExercise(exercise)
+          }
         }
       })
       .catch((e) => {
@@ -204,7 +204,9 @@ const App = () => {
           draftBlock,
           setDraftBlock: mutateDraftBlock,
           addBlockExercise: (exer) => mutateExerciseInBlock(exer, "add"),
-          deleteBlockExercise: (exer) => mutateExerciseInBlock(exer, "remove"),
+          deleteBlockExercise: (exer, block = null) => {
+            mutateExerciseInBlock(exer, "remove", block)
+          },
           draftWorkout,
           setDraftWorkout: mutateDraftWorkout,
           addWorkoutBlock: (block) => mutateBlockInWorkout(block, "add"),

@@ -37,6 +37,33 @@ const Exercises = () => {
       .finally(() => setIsLoading(false))
   }, [token, setMsg, setType, setOpen])
 
+  const handleDel = (exercise_id) => {
+    if (!token) {
+      return
+    }
+
+    axios({
+      method: "DELETE",
+      url: `${process.env.REACT_APP_API_URL}/exercises/${exercise_id}`,
+      headers: {
+        "Access-Control-Allow-Origin": "*", // todo change
+        Authorization: token,
+      },
+    })
+      .then(() => {
+        setMsg("Successfully deleted")
+        setType("success")
+      })
+      .catch((e) => {
+        setMsg("Exercise save error: " + e)
+        setType("error")
+      })
+      .finally(() => {
+        setIsLoading(false)
+        window.location.reload()
+      })
+  }
+
   return (
     <>
       <Typography level="h1">Exercises list</Typography>
@@ -44,7 +71,14 @@ const Exercises = () => {
         {isLoading ? (
           <CircularProgress size="3rem" />
         ) : (
-          <ExercisesList {...{ list, onSave: addBlockExercise, draftBlock }} />
+          <ExercisesList
+            {...{
+              list,
+              onAdd: addBlockExercise,
+              onDelete: handleDel,
+              draftBlock,
+            }}
+          />
         )}
       </Box>
     </>

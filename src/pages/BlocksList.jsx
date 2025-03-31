@@ -15,7 +15,6 @@ const BlocksList = () => {
   const { setOpen, setMsg, setType } = snackbar
 
   const [list, setList] = useState([])
-  const [exercises, setExercises] = useState(new Map())
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -42,31 +41,6 @@ const BlocksList = () => {
       .finally(() => setIsLoading(false))
   }, [token, setMsg, setType, setOpen])
 
-  const handleClick = (block) => {
-    setIsLoading(true)
-    axios({
-      method: "POST",
-      url: `${process.env.REACT_APP_API_URL}/exercises/list`,
-      data: { blockIds: [block.id] },
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: token,
-      },
-    })
-      .then((response) => {
-        setExercises((prev) => {
-          return { ...prev, [block.id]: response.data }
-        })
-      })
-      .catch((e) => {
-        setOpen(true)
-        setType("error")
-        setMsg("Exercises fetch error")
-      })
-      .finally(() => setIsLoading(false))
-  }
-
   return (
     <>
       <Typography level="h1" sx={{ mb: 2 }}>
@@ -80,9 +54,7 @@ const BlocksList = () => {
             <SimpleTreeView key={block.id}>
               <TreeItem
                 itemId={`block-${block.id}`}
-                label={
-                  <BlockLabel {...block} onClick={() => handleClick(block)} />
-                }
+                label={<BlockLabel block={block} />}
                 color="warning"
                 slots={{
                   endIcon: block.draft ? SdCardAlert : TaskAlt,
@@ -91,13 +63,27 @@ const BlocksList = () => {
                   endIcon: { color: block.draft ? "warning" : "success" },
                 }}
               >
-                {exercises[block.id]?.map((exr, index) => {
+                {block.exercises?.map((exr, index) => {
                   return (
                     <>
                       <TreeItem
                         key={`${block.id}-${exr.id}-${index}`}
                         itemId={`${block.id}-${exr.id}-${index}`}
-                        label={`|-- ${exr.titleEn}`}
+                        label={
+                          <div>
+                            <span>{`|-- ${exr.titleEn} `}</span>
+                            {exr.side ? (
+                              <span
+                                style={{
+                                  backgroundColor: "#bbffbb",
+                                  padding: "2px 5px",
+                                }}
+                              >
+                                {exr.side || ""}
+                              </span>
+                            ) : null}
+                          </div>
+                        }
                       />
                       <Divider />
                     </>

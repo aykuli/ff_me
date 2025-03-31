@@ -5,7 +5,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem"
 
 import Item from "./Exercise"
 
-const ExercisesList = ({ list, onSave, draftBlock, countable }) => {
+const ExercisesList = ({ list, onAdd, onDelete, draftBlock, countable }) => {
   return (
     <List>
       {list?.length
@@ -21,8 +21,7 @@ const ExercisesList = ({ list, onSave, draftBlock, countable }) => {
                   }
                 >
                   <Item
-                    exercise={exercise}
-                    onAdd={onSave}
+                    {...{ exercise, onAdd, onDelete }}
                     included={
                       draftBlock?.exercises
                         ? draftBlock?.exercises

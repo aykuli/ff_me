@@ -77,7 +77,7 @@ const Header = ({ children }) => {
           {msg}
         </Alert>
       </Snackbar>
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ mb: 8 }}>
         {currRoute === "/login" ? (
           <Typography variant="h3">Training set application</Typography>
         ) : (
