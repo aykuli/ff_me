@@ -146,7 +146,10 @@ const Header = ({ children }) => {
               <MenuItem
                 disabled={route === currRoute}
                 key={route}
-                onClick={() => navigate(route)}
+                onClick={() => {
+                  setOpenMn(false)
+                  navigate(route)
+                }}
               >
                 {title}
               </MenuItem>

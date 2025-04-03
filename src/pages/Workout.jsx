@@ -159,11 +159,6 @@ const Workout = () => {
       })
   }
 
-  const handleChooseBlock = () => {
-    // setDraftTraining
-    // navigate to blocks list page
-  }
-
   async function startExerciseRoutine() {
     if (!workout?.blocks?.length) {
       return
@@ -256,6 +251,13 @@ const Workout = () => {
   }
 
   const toggleDraft = () => {
+    if (!workout.blocks?.length) {
+      setMsg("Add block to workout to be able make the workout ready")
+      setType("warning")
+      setOpen(true)
+      return
+    }
+
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API_URL}/trainings/${id}/toggle_draft`,
@@ -309,19 +311,22 @@ const Workout = () => {
                       padding: "5px 10px",
                     }}
                   >{`Total duration ${totalDur} minutes`}</div>
-                  <div>
-                    <IconButton
-                      color={workout.draft ? "success" : undefined}
-                      size="small"
-                      onClick={toggleDraft}
-                      title="toggle draft"
-                    >
-                      <Flaky />
-                    </IconButton>
-                    <IconButton size="small" onClick={handleDel}>
-                      <Delete />
-                    </IconButton>
-                  </div>
+
+                  {workout.blocks?.length ? ( // workout might be ready only with the block
+                    <div>
+                      <IconButton
+                        color={workout.draft ? "success" : undefined}
+                        size="small"
+                        onClick={toggleDraft}
+                        title="toggle draft"
+                      >
+                        <Flaky />
+                      </IconButton>
+                      <IconButton size="small" onClick={handleDel}>
+                        <Delete />
+                      </IconButton>
+                    </div>
+                  ) : null}
                 </div>
                 <CustomLabel
                   lang="en"
@@ -361,15 +366,6 @@ const Workout = () => {
                     <Button onClick={handleAddBlock}>Add more blocks</Button>
                   )}
                 </div>
-
-                {!workout.blocks?.length && (
-                  <div>
-                    <p>Please, add some blocks.</p>
-                    <Button onClick={handleChooseBlock}>
-                      Go to blocks page
-                    </Button>
-                  </div>
-                )}
 
                 {workout.blocks?.length !== 0 && (
                   <BlocksList blocks={workout.blocks} />

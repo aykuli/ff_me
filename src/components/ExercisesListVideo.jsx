@@ -19,7 +19,9 @@ const ListVideo = ({
       <Button sx={{ mb: 4 }} variant="contained" onClick={onPlay}>
         Play
       </Button>
-      <Typography level="h2">{`Current: ${currTxt}`}</Typography>
+      {currExercise && (
+        <Typography level="h2">{`Current: ${currTxt}`}</Typography>
+      )}
       {currExercise && (
         <div style={{ position: "relative", maxWidth: 700 }}>
           <Video
@@ -88,7 +90,7 @@ const ListVideo = ({
           </div>
         </div>
       )}
-      <Typography level="h2">{`Next: ${nextTxt}`}</Typography>
+      {nextExercise && <Typography level="h2">{`Next: ${nextTxt}`}</Typography>}
       {nextExercise && (
         <div style={{ position: "relative", maxWidth: 600 }}>
           <Video
