@@ -10,10 +10,12 @@ import {
   ListItemButton,
   ListItemText,
   CircularProgress,
+  ListItemIcon,
 } from "@mui/material"
 import { Typography } from "@mui/joy"
 
 import AuthContext from "../context"
+import { Star } from "@mui/icons-material"
 
 const WorkoutsList = () => {
   const { token, snackbar } = useContext(AuthContext)
@@ -53,30 +55,31 @@ const WorkoutsList = () => {
 
   return (
     <Container maxWidth="md" style={{ marginTop: "20px" }}>
-      <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <Typography level="h1">Workouts list</Typography>
-        <nav aria-label="projects">
-          {isLoading ? (
-            <CircularProgress size="3rem" />
-          ) : (
-            <List>
-              {list.map(({ id, titleEn, titleRu }) => {
-                return (
-                  <ListItem key={id} id={id} disablePadding>
-                    <ListItemButton>
-                      <ListItemText>
-                        <NavLink to={`/workouts/${id}`} end>
-                          <Typography level="body-lg">{titleEn}</Typography>
-                          <Typography level="body-lg">{titleRu}</Typography>
-                        </NavLink>
-                      </ListItemText>
-                    </ListItemButton>
-                  </ListItem>
-                )
-              })}
-            </List>
-          )}
-        </nav>
+      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+        {isLoading ? (
+          <CircularProgress size="3rem" />
+        ) : (
+          <List subheader={<Typography level="h1">Workouts list</Typography>}>
+            {list.map(({ id, titleEn, titleRu, createdAt }) => {
+              return (
+                <ListItem key={id} id={id} disablePadding divider>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <Star />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <NavLink to={`/workouts/${id}`} end>
+                        <Typography level="body-lg">{titleEn}</Typography>
+                        <Typography level="body-lg">{titleRu}</Typography>
+                      </NavLink>
+                      <Typography level="body-sm">{createdAt}</Typography>
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              )
+            })}
+          </List>
+        )}
       </Box>
     </Container>
   )

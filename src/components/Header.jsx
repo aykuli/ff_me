@@ -54,7 +54,7 @@ const Header = ({ children }) => {
       },
     })
       .catch((e) => {
-        if (e.response.status === 403) {
+        if (e.response?.status === 403) {
           navigate("/login")
         }
       })
