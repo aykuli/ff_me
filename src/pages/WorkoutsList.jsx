@@ -62,7 +62,7 @@ const WorkoutsList = () => {
             <List>
               {list.map(({ id, titleEn, titleRu }) => {
                 return (
-                  <ListItem id={id} disablePadding>
+                  <ListItem key={id} id={id} disablePadding>
                     <ListItemButton>
                       <ListItemText>
                         <NavLink to={`/workouts/${id}`} end>

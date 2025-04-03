@@ -56,13 +56,9 @@ const BlockLabelSquares = ({
           textAlign: "center",
         }}
       >
-        <Typography level="title-md">
-          {draft ? exercises?.length || 0 : exercisesCount}
-        </Typography>
+        <Typography level="title-md">{exercises?.length}</Typography>
         <Typography level="body-sm">exercises</Typography>
-        {draft && (
-          <Typography level="body-sm">{`of ${exercisesCount}`}</Typography>
-        )}
+        <Typography level="body-sm">{`of ${exercisesCount}`}</Typography>
       </div>
     </div>
   )

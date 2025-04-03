@@ -223,7 +223,7 @@ const Block = () => {
       })
       .finally(() => {
         setIsLoading(false)
-        window.location.reload()
+        navigate("/blocks")
       })
   }
 
@@ -233,6 +233,10 @@ const Block = () => {
   }
 
   const toggleDraft = () => {
+    if (needMoreExercises) {
+      return
+    }
+
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API_URL}/blocks/${id}/toggle_draft`,
@@ -284,16 +288,16 @@ const Block = () => {
                     </Button>
                   ) : null}
 
-                  <IconButton
-                    color={
-                      block.draft && !needMoreExercises ? "success" : undefined
-                    }
-                    size="small"
-                    onClick={toggleDraft}
-                    title={`make ${block.draft ? "ready" : "draft"}`}
-                  >
-                    <Flaky />
-                  </IconButton>
+                  {!needMoreExercises ? (
+                    <IconButton
+                      color={block.draft ? "success" : undefined}
+                      size="small"
+                      onClick={toggleDraft}
+                      title={`make ${block.draft ? "ready" : "draft"}`}
+                    >
+                      <Flaky />
+                    </IconButton>
+                  ) : null}
                   <IconButton size="small" onClick={handleDel}>
                     <Delete />
                   </IconButton>

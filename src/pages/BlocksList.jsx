@@ -49,9 +49,9 @@ const BlocksList = () => {
       {isLoading ? (
         <CircularProgress size="3rem" />
       ) : (
-        list?.map((block) => {
+        list?.map((block, bidx) => {
           return (
-            <SimpleTreeView key={block.id}>
+            <SimpleTreeView key={`${block.id}-${bidx}`}>
               <TreeItem
                 itemId={`block-${block.id}`}
                 label={<BlockLabel block={block} />}

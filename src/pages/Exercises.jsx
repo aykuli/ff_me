@@ -70,7 +70,6 @@ const Exercises = () => {
 
   const filterExercise = (e) => {
     e.preventDefault()
-    console.log("hello")
     setFilterBody((prev) => {
       return { ...prev, suggestion }
     })
