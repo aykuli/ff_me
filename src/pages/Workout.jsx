@@ -84,7 +84,7 @@ const Workout = () => {
   const handleDel = () => {
     axios({
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/training/${id}`,
+      url: `${process.env.REACT_APP_API_URL}/trainings/${id}`,
 
       headers: {
         "Access-Control-Allow-Origin": "*", // todo change
