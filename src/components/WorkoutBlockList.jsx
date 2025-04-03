@@ -28,7 +28,7 @@ const BlocksList = ({ blocks }) => {
             <SimpleTreeView key={`${block.id}-${idx}`}>
               <TreeItem
                 itemId={`block-${block.id}`}
-                label={<BlockLabel {...block} />}
+                label={<BlockLabel block={block} />}
                 color="warning"
                 slots={{
                   endIcon: block.draft ? SdCardAlert : TaskAlt,
