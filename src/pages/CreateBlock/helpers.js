@@ -13,8 +13,8 @@ const full = ({ titleEn, titleRu, totalDuration, onTime, exercisesCount }) => {
   return (
     titleEn !== "" &&
     titleRu !== "" &&
-    totalDuration > 5 &&
-    onTime > 5 &&
+    totalDuration >= 5 &&
+    onTime >= 20 &&
     exercisesCount >= 5
   )
 }
