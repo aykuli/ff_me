@@ -147,7 +147,7 @@ const Item = ({ exercise, onAdd, onDelete, included }) => {
                     }}
                     label="Side"
                   >
-                    {["none", "rigth", "left", "backward", "forward"].map(
+                    {["none", "right", "left", "backward", "forward"].map(
                       (v) => {
                         return (
                           <MenuItem key={v} value={v}>
