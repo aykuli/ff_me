@@ -25,7 +25,6 @@ const Block = () => {
     token,
     snackbar,
     setDraftBlock,
-    draftWorkout,
     addWorkoutBlock,
     deleteBlockExercise,
   } = useContext(AuthContext)
