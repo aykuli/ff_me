@@ -273,20 +273,16 @@ const Block = () => {
             {block && (
               <div>
                 <div style={{ display: "flex", justifyContent: "end" }}>
-                  {draftWorkout && !needMoreExercises ? (
-                    <Button
-                      color={
-                        block.draft && !needMoreExercises
-                          ? "success"
-                          : undefined
-                      }
-                      size="small"
-                      onClick={handleAddToWorkout}
-                      title="add block to draft workout"
-                    >
-                      Add to workout
-                    </Button>
-                  ) : null}
+                  <Button
+                    color={
+                      block.draft && !needMoreExercises ? "success" : undefined
+                    }
+                    size="small"
+                    onClick={handleAddToWorkout}
+                    title="add block to draft workout"
+                  >
+                    Add to workout
+                  </Button>
 
                   {!needMoreExercises ? (
                     <IconButton
